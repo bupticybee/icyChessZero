@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ChineseChessRecord Version="1.0">
+ <Head>
+  <Name>第一局 屏风马巡河炮抵当头炮局(和)</Name>
+  <URL />
+  <From>第一局　屏风马巡河炮抵当头炮局(和).xqf</From>
+  <ContestType />
+  <Contest>居荣鑫《象棋古谱全局三种》</Contest>
+  <Round />
+  <Group />
+  <Table />
+  <Date />
+  <Site />
+  <TimeRule />
+  <Red />
+  <RedTeam />
+  <RedTime />
+  <RedRating />
+  <Black />
+  <BlackTeam />
+  <BlackTime />
+  <BlackRating />
+  <Referee />
+  <Recorder />
+  <Commentator>居荣鑫</Commentator>
+  <CommentatorURL />
+  <Creator />
+  <CreatorURL />
+  <DateCreated />
+  <DateModified>2014-09-08 20:19:09</DateModified>
+  <ECCO>C03</ECCO>
+  <RecordType>1</RecordType>
+  <RecordKind />
+  <RecordResult>0</RecordResult>
+  <ResultType />
+  <FEN>rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1</FEN>
+ </Head>
+ <MoveList>
+  <Move value="00-00"><![CDATA[中炮横车盘头马对屏风马双炮巡河]]></Move>
+  <Move value="77-47" />
+  <Move value="70-62" />
+  <Move value="79-67" />
+  <Move value="63-64" />
+  <Move value="19-27" />
+  <Move value="10-22" />
+  <Move value="46-45"><![CDATA[当对方布成屏风马后，立即冲中兵展开攻势，准备双马盘头出击，然后起左横车助攻，是石杨遗局的特色之一。]]></Move>
+  <Move value="20-42"><![CDATA[补象比较呆板。宜改走士4进5，以便必要时还架中炮反击。]]></Move>
+  <Move value="09-08" />
+  <Move value="80-70" />
+  <Move value="27-46" />
+  <Move value="23-24"><![CDATA[通活双马，便于防守反击。也是石杨遗局的特色。在当时，这是一种抵挡当头炮盘头马的较坚强阵式。]]></Move>
+  <Move value="66-65" />
+  <Move value="12-14" />
+  <Move value="26-25" />
+  <Move value="72-74"><![CDATA[双炮巡河加强防守，使红方兵马不能越过雷池一步，这在古谱《梅花泉》中也已使用（请参阅该谱改编本第6局），到石杨时代，又有所发展。从现在看：如果先不补象而补士，则可炮8进2，一炮巡河．另一炮伺机架中炮还击，更机动有力。]]></Move>
+  <Move value="08-38" />
+  <Move value="30-41" />
+  <Move value="17-27" />
+  <Move value="00-30" />
+  <Move value="89-88"><![CDATA[如改走车六进八，马3退4,车一进一，卒7进1,马五进三,卒3进l，马三进四，炮8平7，然后车八进三，成对攻之势。]]></Move>
+  <Move value="22-34" />
+  <Move value="38-35" />
+  <Move value="62-54" />
+  <Move value="45-44" />
+  <Move value="54-46" />
+  <Move value="67-46" />
+  <Move value="43-44" />
+  <Move value="65-64"><![CDATA[应改走兵七进-,象5进3，兵三进一，红方大占优势。]]></Move>
+  <Move value="44-45" />
+  <Move value="47-45" />
+  <Move value="14-15" />
+  <Move value="25-24" />
+  <Move value="15-45" />
+  <Move value="35-45" />
+  <Move value="34-46" />
+  <Move value="45-46" />
+  <Move value="74-24" />
+  <Move value="27-47" />
+  <Move value="70-73" />
+  <Move value="88-18" />
+  <Move value="30-34" />
+  <Move value="18-10" />
+  <Move value="24-20" />
+  <Move value="46-66" />
+  <Move value="40-30" />
+  <Move value="59-48" />
+  <Move value="73-23" />
+  <Move value="64-63" />
+  <Move value="23-29" end="1"><![CDATA[至此，红方多兵，黑方得相，势均力敌成正和局。试列两例：一、兵三进一，车3退5，兵三进一，车4平7；二、车八退三，车3平4,反黑胜。  ]]></Move>
+ </MoveList>
+</ChineseChessRecord>

@@ -1,0 +1,2 @@
+celery -A tasks flower 
+

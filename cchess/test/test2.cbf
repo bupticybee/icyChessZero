@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ChineseChessRecord Version="1.0">
+ <Head>
+  <Name>第十局 当头炮抵当头炮局(和)</Name>
+  <URL />
+  <From>第十局 当头炮抵当头炮局(和).xqf</From>
+  <ContestType />
+  <Contest />
+  <Round />
+  <Group />
+  <Table />
+  <Date />
+  <Site />
+  <TimeRule />
+  <Red />
+  <RedTeam />
+  <RedTime />
+  <RedRating />
+  <Black />
+  <BlackTeam />
+  <BlackTime />
+  <BlackRating />
+  <Referee />
+  <Recorder />
+  <Commentator />
+  <CommentatorURL />
+  <Creator />
+  <CreatorURL />
+  <DateCreated />
+  <DateModified>2014-09-08 22:22:20</DateModified>
+  <ECCO>D04</ECCO>
+  <RecordType>1</RecordType>
+  <RecordKind />
+  <RecordResult>3</RecordResult>
+  <ResultType />
+  <FEN>rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1</FEN>
+ </Head>
+ <MoveList>
+  <Move value="00-00"><![CDATA[ 顺炮横车弃马对直车不受弃马局]]></Move>
+  <Move value="77-47" />
+  <Move value="72-42" />
+  <Move value="79-67" />
+  <Move value="70-62"><![CDATA[  如喜用横车布阵，可不上马而径走车9进l，抢出横车。]]></Move>
+  <Move value="89-88" />
+  <Move value="80-70" />
+  <Move value="88-38" />
+  <Move value="70-76"><![CDATA[    黑方进车兵线是激进着法。现在大都走车8进4巡河，或者马2进3，通活右侧人马。]]></Move>
+  <Move value="38-31"><![CDATA[  急攻着法。现在大都走马八进七舒展左侧兵力，先手较易掌握。]]></Move>
+  <Move value="10-02"><![CDATA[    跳边马，削弱了中路防守。《反梅花谱》改走台2进3牵制红车比较有力：既可避免红方平车八路封锁，又可诱车捉马，然后伸炮退马，困车争先。]]></Move>
+  <Move value="09-08"><![CDATA[   出车诱炮轰马，布下圈套。如改走兵七进一，可以牢握主动权。试举一例：车8平7，马八进七，士6进5，马七进六，卒7进l，炮八平七，红方优势。]]></Move>
+  <Move value="76-66"><![CDATA[  正着。如贪马走炮2进7，则炮八进五，红方弃马抢攻，攻势迅猛。]]></Move>
+  <Move value="08-58" />
+  <Move value="30-41" />
+  <Move value="19-07" />
+  <Move value="12-14" />
+  <Move value="31-34" />
+  <Move value="03-04" />
+  <Move value="58-51"><![CDATA[    太急！似可改走兵七进一，进一步阻塞巡河黑炮炮路，又可为边马铺好通道，一举两得。黑方如接走炮5平4，则车四进一，然后有炮八进一、炮五退一等多种展开攻势的手段。]]></Move>
+  <Move value="42-32"><![CDATA[    卸炮及时调整部署，巩固后方，明智之着。]]></Move>
+  <Move value="46-45" />
+  <Move value="20-42" />
+  <Move value="51-57" />
+  <Move value="14-24" />
+  <Move value="47-27" />
+  <Move value="00-10" />
+  <Move value="27-24" />
+  <Move value="23-24"><![CDATA[   黑方利用红方运子不当，逼红方兑去中炮后，阵容工整，形势占优．]]></Move>
+  <Move value="45-44" />
+  <Move value="43-44" />
+  <Move value="34-44" />
+  <Move value="10-13" />
+  <Move value="17-47" />
+  <Move value="02-23" />
+  <Move value="44-24"><![CDATA[   如改走车五平六，则马7进5，车六进一,马5进7，伏马7进5恶着，红方也难应付。]]></Move>
+  <Move value="62-43" />
+  <Move value="24-04" />
+  <Move value="23-35"><![CDATA[    软着。宜改走车2进2逐车。红方如接走车九平六，则车2平4，黑方大占优势。]]></Move>
+  <Move value="04-44" />
+  <Move value="35-56"><![CDATA[   同样进马，应改走马5进7，黑方仍然占很大优势。]]></Move>
+  <Move value="44-46" />
+  <Move value="43-64" />
+  <Move value="46-36" />
+  <Move value="64-45"><![CDATA[    应改走炮4进l，黑方仍持很大优势。]]></Move>
+  <Move value="36-46" />
+  <Move value="56-64"><![CDATA[   进车逼黑方交换子力，形势顿见和缓。]]></Move>
+  <Move value="57-54" />
+  <Move value="66-67" />
+  <Move value="46-45" />
+  <Move value="13-14" />
+  <Move value="54-14" />
+  <Move value="64-45" />
+  <Move value="39-48" />
+  <Move value="67-69" />
+  <Move value="14-15" />
+  <Move value="69-65" />
+  <Move value="06-05" />
+  <Move value="63-64" />
+  <Move value="15-25" />
+  <Move value="32-33" />
+  <Move value="47-17" />
+  <Move value="33-73" />
+  <Move value="49-39" />
+  <Move value="73-79" />
+  <Move value="39-38" />
+  <Move value="79-75" />
+  <Move value="17-15" />
+  <Move value="45-26" />
+  <Move value="25-26" />
+  <Move value="75-15" />
+  <Move value="07-15" />
+  <Move value="65-15"><![CDATA[   经过一番兑子后，成为和局。]]></Move>
+  <Move value="05-04" />
+  <Move value="64-65" />
+  <Move value="26-23" end="1"><![CDATA[和  ]]></Move>
+ </MoveList>
+</ChineseChessRecord>
