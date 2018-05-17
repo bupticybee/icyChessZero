@@ -1,8 +1,12 @@
 from asyncio import Future
 import asyncio
 from asyncio.queues import Queue
-import uvloop
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+try:
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except:
+    print("uvloop not detected, ignoring")
+    pass
 from cchess_zero import cbf
 import tensorflow as tf
 import numpy as np
