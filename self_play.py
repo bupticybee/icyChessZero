@@ -1,6 +1,7 @@
 from asyncio import Future
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+gpu_num = 0
+os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 import asyncio
 from asyncio.queues import Queue
 try:
@@ -101,7 +102,7 @@ class GameState():
         self.pastdic[self.statestr] += 1
         self.maxrepeat = max(self.maxrepeat,self.pastdic[self.statestr])
     
-(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/5_7_resnet_joint-two_stage/model_57',labels)
+(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/5_7_resnet_joint-two_stage/model_57',labels,GPU_CORE=[gpu_num])
 queue = Queue(400)
 async def push_queue( features,loop):
     future = loop.create_future()
