@@ -178,6 +178,7 @@ while True:
     mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
                                         ,virtual_loss=0.02,policy_loop_arg=True)
     result = 'peace'
+    can_surrender = random.random() > 0.1
     for i in range(150):
         begin = time.time()
         is_end,winner = game_states.game_end()
@@ -197,6 +198,9 @@ while True:
                 ,predict_workers=[prediction_worker(mcts_policy_w)])
             policies,score = list(zip(acts, act_probs)),mcts_policy_w._root._Q
             score = -score
+            if score < -0.99 and can_surrender:
+                winner = 'b'
+                break
         else:
             queue = Queue(400)
             player = 'b'
@@ -208,6 +212,9 @@ while True:
             acts, act_probs = mcts_policy_b.get_move_probs(game_states,temp=temp,verbose=False
                 ,predict_workers=[prediction_worker(mcts_policy_b)])
             policies,score = list(zip(acts, act_probs)),mcts_policy_b._root._Q
+            if score > 0.99 and can_surrender:
+                winner = 'w'
+                break
 
         move = get_random_policy(policies)
         states.append(game_states.statestr)
@@ -224,12 +231,6 @@ while True:
         mcts_policy_w.update_with_move(move)
         mcts_policy_b.update_with_move(move)
         #print("move {} player {} move {} value {} time {}".format(i + 1,player,move,score,time.time() - start))
-        if score > 0.99:
-            winner = 'w'
-            break
-        elif score < -0.99:
-            winner = 'b'
-            break
     if winner is None:
         winner = 'peace'
     cbfile = cbf.CBF(black='mcts',red='mcts',date='2018-05-113',site='北京',name='noname',datemodify='2018-05-13',
