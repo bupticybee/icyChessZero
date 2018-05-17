@@ -9,6 +9,7 @@ import cv2
 currentfile = '/'.join(__file__.split('/')[:-1])
 img_path = os.path.join(currentfile,'images')
 
+
 def put_chess(l_img,s_img,cord):
     x_offset, y_offset = cord
     y1, y2 = y_offset, y_offset + s_img.shape[0]

@@ -39,6 +39,8 @@ class GameState():
         self.xs = 'abcdefghi'
         self.pastdic = {}
         self.maxrepeat = 0
+        self.lastmove = ""
+        
     def get_king_pos(self):
         board = self.statestr.replace("1", " ")
         board = board.replace("2", "  ")
@@ -66,9 +68,9 @@ class GameState():
         #    return True,'w'
         #elif self.statestr.find('K') == -1:
         #    return True,'b'
-        if self.maxrepeat >= 3:
-            return True,self.get_current_player()
         wk,bk = self.get_king_pos()
+        if self.maxrepeat >= 3 and (self.lastmove[-2:] != wk and self.lastmove[-2:] != bk):
+            return True,self.get_current_player()
         targetkingdic = {'b':wk,'w':bk}
         moveset = GameBoard.get_legal_moves(self.statestr,self.get_current_player())
         
@@ -83,6 +85,7 @@ class GameState():
         return self.currentplayer
     
     def do_move(self,move):
+        self.lastmove = move
         self.statestr = GameBoard.sim_do_action(move,self.statestr)
         if self.currentplayer == 'w':
             self.currentplayer = 'b'
