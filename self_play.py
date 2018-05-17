@@ -1,4 +1,6 @@
 from asyncio import Future
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 import asyncio
 from asyncio.queues import Queue
 try:
