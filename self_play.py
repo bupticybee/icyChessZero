@@ -157,7 +157,7 @@ async def policy_value_fn_queue(state,loop):
         for move,prob in zip(uci_labels,policyout):
             if move in legal_move:
                 action_probs.append((move,prob))
-    action_probs = sorted(action_probs,key=lambda x:x[1])
+    #action_probs = sorted(action_probs,key=lambda x:x[1])
     return action_probs, valout
 
 def get_random_policy(policies):
