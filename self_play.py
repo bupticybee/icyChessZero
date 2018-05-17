@@ -229,8 +229,8 @@ while True:
             print('{} {} {:.4f}s {:.4f}, sel:{} pol:{} upd:{}'.format(i + 1,move,time.time() - begin,score
                 ,mcts_policy_b.select_time,mcts_policy_b.policy_time,mcts_policy_b.update_time))
             mcts_policy_b.select_time,mcts_policy_b.policy_time,mcts_policy_b.update_time = 0,0,0
-        mcts_policy_w.update_with_move(move)
-        mcts_policy_b.update_with_move(move)
+        mcts_policy_w.update_with_move(move,allow_legacy=False)
+        mcts_policy_b.update_with_move(move,allow_legacy=False)
         #print("move {} player {} move {} value {} time {}".format(i + 1,player,move,score,time.time() - start))
     if winner is None:
         winner = 'peace'

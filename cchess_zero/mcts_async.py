@@ -184,12 +184,12 @@ class MCTS(object):
 
         return acts, act_probs
 
-    def update_with_move(self, last_move):
+    def update_with_move(self, last_move,allow_legacy=True):
         """Step forward in the tree, keeping everything we already know
         about the subtree.
         """
         self.num_proceed = 0
-        if last_move in self._root._children:
+        if last_move in self._root._children and allow_legacy:
             self._root = self._root._children[last_move]
             self._root._parent = None
         else:
