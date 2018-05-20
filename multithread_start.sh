@@ -1,8 +1,9 @@
 PY_ENV="python3"
 GPU_CORE=0
 THREADS=16
+SERVER="http://10.109.247.219:10086"
 parsearg () {
-  while getopts "p:g:t:" optname
+  while getopts "p:g:t:s:" optname
     do
       case "$optname" in
         "p")
@@ -13,6 +14,9 @@ parsearg () {
           ;;
         "t")
           THREADS=${OPTARG}
+          ;;
+        "s")
+          SERVER=${OPTARG}
           ;;
         "?")
           echo "Unknown option $OPTARG"
@@ -34,6 +38,7 @@ echo "-----------------------------------"
 echo "python env: "${PY_ENV}
 echo "gpu core: "${GPU_CORE}
 echo "threads number:"${THREADS}
+echo "server :"${SERVER}
 echo "-----------------------------------"
 echo "Is the setting ok? [y/N]"
 
@@ -54,7 +59,7 @@ do
 {
 	#/usr/local/bin/python3 self_play.py	
     echo "${PY_ENV} -g=${GPU_CORE}"
-	${PY_ENV} self_play.py -g ${GPU_CORE}
+	${PY_ENV} self_play.py -g ${GPU_CORE} -s ${SERVER}
 } &
 done
 wait

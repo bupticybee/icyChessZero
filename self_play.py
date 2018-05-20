@@ -36,12 +36,16 @@ from cchess_zero import mcts_pool,mcts_async
 from collections import deque, defaultdict, namedtuple
 QueueItem = namedtuple("QueueItem", "feature future")
 import argparse
+import urllib.request
+import urllib.parse
 parser = argparse.ArgumentParser(description="mcts self play script") 
 parser.add_argument('--verbose', '-v', action='store_true', help='verbose mode')
 parser.add_argument('--gpu', '-g' , choices=[int(i) for i in list(range(8))],type=int,help="gpu core number",default=0)
+parser.add_argument('--server', '-s' ,type=str,help="distributed server location",default=None)
 args = parser.parse_args()
 
 gpu_num = int(args.gpu)
+server = args.server
 os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 
 class GameState():
@@ -245,5 +249,16 @@ while True:
     cbfile.receive_moves(moves)
     stamp = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
     randstamp = random.randint(0,1000)
+
+    # send data to server if possible
+    if server is not None and server[:4] == 'http':        
+        print("sending gameplay to server")
+        data = urllib.parse.urlencode({'name':'{}_{}_mcts-mcts_{}.cbf'.format(stamp,randstamp,winner),'content':cbfile.text})
+        data = data.encode('utf-8')
+        request = urllib.request.Request("{}/submit_chess".format(server))
+        request.add_header("Content-Type","application/x-www-form-urlencoded;charset=utf-8")
+        f = urllib.request.urlopen(request, data)
+        print(f.read().decode('utf-8'))
+
     cbfile.dump('data/self-plays/{}_{}_mcts-mcts_{}.cbf'.format(stamp,randstamp,winner))
 mcts_play_wins.append(winner)
