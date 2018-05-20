@@ -1,7 +1,5 @@
 from asyncio import Future
 import os
-gpu_num = 0
-os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 import asyncio
 from asyncio.queues import Queue
 try:
@@ -37,6 +35,14 @@ from cchess import BaseChessBoard
 from cchess_zero import mcts_pool,mcts_async
 from collections import deque, defaultdict, namedtuple
 QueueItem = namedtuple("QueueItem", "feature future")
+import argparse
+parser = argparse.ArgumentParser(description="mcts self play script") 
+parser.add_argument('--verbose', '-v', action='store_true', help='verbose mode')
+parser.add_argument('--gpu', '-g' , choices=[int(i) for i in list(range(8))],type=int,help="gpu core number",default=0)
+args = parser.parse_args()
+
+gpu_num = int(args.gpu)
+os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 
 class GameState():
     def __init__(self):
