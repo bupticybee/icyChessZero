@@ -38,6 +38,8 @@ QueueItem = namedtuple("QueueItem", "feature future")
 import argparse
 import urllib.request
 import urllib.parse
+from gameplay import GameState,countpiece
+
 parser = argparse.ArgumentParser(description="mcts self play script") 
 parser.add_argument('--verbose', '-v', action='store_true', help='verbose mode')
 parser.add_argument('--gpu', '-g' , choices=[int(i) for i in list(range(8))],type=int,help="gpu core number",default=0)
@@ -48,71 +50,10 @@ gpu_num = int(args.gpu)
 server = args.server
 os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 
-class GameState():
-    def __init__(self):
-        self.statestr = 'RNBAKABNR/9/1C5C1/P1P1P1P1P/9/9/p1p1p1p1p/1c5c1/9/rnbakabnr'
-        self.currentplayer = 'w'
-        self.ys = '9876543210'[::-1]
-        self.xs = 'abcdefghi'
-        self.pastdic = {}
-        self.maxrepeat = 0
-        self.lastmove = ""
-        
-    def get_king_pos(self):
-        board = self.statestr.replace("1", " ")
-        board = board.replace("2", "  ")
-        board = board.replace("3", "   ")
-        board = board.replace("4", "    ")
-        board = board.replace("5", "     ")
-        board = board.replace("6", "      ")
-        board = board.replace("7", "       ")
-        board = board.replace("8", "        ")
-        board = board.replace("9", "         ")
-        board = board.split('/')
 
-        for i in range(3):
-            pos = board[i].find('K')
-            if pos != -1:
-                K = "{}{}".format(self.xs[pos],self.ys[i])
-        for i in range(-1,-4,-1):
-            pos = board[i].find('k')
-            if pos != -1:
-                k = "{}{}".format(self.xs[pos],self.ys[i])
-        return K,k
-            
-    def game_end(self):
-        #if self.statestr.find('k') == -1:
-        #    return True,'w'
-        #elif self.statestr.find('K') == -1:
-        #    return True,'b'
-        wk,bk = self.get_king_pos()
-        if self.maxrepeat >= 3 and (self.lastmove[-2:] != wk and self.lastmove[-2:] != bk):
-            return True,self.get_current_player()
-        targetkingdic = {'b':wk,'w':bk}
-        moveset = GameBoard.get_legal_moves(self.statestr,self.get_current_player())
-        
-        targetset = set([i[-2:] for i in moveset])
-        
-        targ_king = targetkingdic[self.currentplayer]
-        if targ_king in targetset:
-            return True,self.currentplayer
-        return False,None
     
-    def get_current_player(self):
-        return self.currentplayer
-    
-    def do_move(self,move):
-        self.lastmove = move
-        self.statestr = GameBoard.sim_do_action(move,self.statestr)
-        if self.currentplayer == 'w':
-            self.currentplayer = 'b'
-        elif self.currentplayer == 'b':
-            self.currentplayer = 'w'
-        self.pastdic.setdefault(self.statestr,0)
-        self.pastdic[self.statestr] += 1
-        self.maxrepeat = max(self.maxrepeat,self.pastdic[self.statestr])
-    
-(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/5_7_resnet_joint-two_stage/model_57',labels,GPU_CORE=[gpu_num])
+#(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/5_7_resnet_joint-two_stage/model_57',labels,GPU_CORE=[gpu_num])
+(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/update_model/model_2',labels,GPU_CORE=[gpu_num])
 queue = Queue(400)
 async def push_queue( features,loop):
     future = loop.create_future()
@@ -185,12 +126,16 @@ while True:
 
     game_states = GameState()
     mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
-                                        ,virtual_loss=0.02,policy_loop_arg=True)
+                                        ,virtual_loss=0.02,policy_loop_arg=True,c_puct=1.5)
     mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
-                                        ,virtual_loss=0.02,policy_loop_arg=True)
+                                        ,virtual_loss=0.02,policy_loop_arg=True,c_puct=1.5)
     result = 'peace'
+    peace_round = 0
+    remain_piece = countpiece(game_states.statestr)
+    
     can_surrender = random.random() > 0.1
-    for i in range(150):
+    can_surrender = False
+    for i in range(400):
         begin = time.time()
         is_end,winner = game_states.game_end()
         if is_end == True:
@@ -231,6 +176,19 @@ while True:
         states.append(game_states.statestr)
         moves.append(move)
         game_states.do_move(move)
+        
+        #peace strategy
+        remain_piece_round = countpiece(game_states.statestr)
+        if remain_piece_round < remain_piece:
+            remain_piece = remain_piece_round
+            peace_round = 0
+        else:
+            peace_round += 1
+            
+        if i > 150 and peace_round > 60:
+            winner = 'peace'
+            break
+            
         if player == 'w':
             print('{} {} {:.4f}s {:.4f}, sel:{} pol:{} upd:{}'.format(i + 1,move,time.time() - begin,score
                 ,mcts_policy_w.select_time,mcts_policy_w.policy_time,mcts_policy_w.update_time))

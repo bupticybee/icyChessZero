@@ -16,7 +16,7 @@ class TreeNode(object):
     its visit-count-adjusted prior score u.
     """
 
-    def __init__(self, parent, prior_p):
+    def __init__(self, parent, prior_p,noise=False):
         self._parent = parent
         self._children = {}  # a map from action to TreeNode
         self._n_visits = 0
@@ -24,15 +24,23 @@ class TreeNode(object):
         self._u = 0
         self._P = prior_p
         self.virtual_loss = 0
+        self.noise = noise
 
     def expand(self, action_priors):
         """Expand tree by creating new children.
         action_priors: a list of tuples of actions and their prior probability
             according to the policy function.
         """
-        for action, prob in action_priors:
-            if action not in self._children:
-                self._children[action] = TreeNode(self, prob)
+        if self.noise == True and self._parent == None:
+            noise_d =  np.random.dirichlet([0.3] * len(action_priors))
+            for (action, prob),one_noise in zip(action_priors,noise_d):
+                if action not in self._children:
+                    prob = (1 - 0.25) * prob + 0.25 * one_noise
+                    self._children[action] = TreeNode(self, prob, noise=self.noise)
+        else:
+            for action, prob in action_priors:
+                if action not in self._children:
+                    self._children[action] = TreeNode(self, prob)
 
     def select(self, c_puct):
         """Select action among children that gives maximum action value Q
@@ -81,7 +89,7 @@ class TreeNode(object):
 
 class MCTS(object):
     """An implementation of Monte Carlo Tree Search."""
-    def __init__(self, policy_value_fn, c_puct=5, n_playout=10000,search_threads=32,virtual_loss=3,policy_loop_arg=False):
+    def __init__(self, policy_value_fn, c_puct=5, n_playout=10000,search_threads=32,virtual_loss=3,policy_loop_arg=False,dnoise=False):
         """
         policy_value_fn: a function that takes in a board state and outputs
             a list of (action, probability) tuples and also a score in [-1, 1]
@@ -91,7 +99,7 @@ class MCTS(object):
             converges to the maximum-value policy. A higher value means
             relying on the prior more.
         """
-        self._root = TreeNode(None, 1.0)
+        self._root = TreeNode(None, 1.0, noise=dnoise)
         self._policy = policy_value_fn
         self._c_puct = c_puct
         self._n_playout = n_playout
@@ -106,6 +114,7 @@ class MCTS(object):
         self.update_time = 0
         
         self.num_proceed = 0
+        self.dnoise = dnoise
 
     async def _playout(self, state):
         """Run a single playout from the root to the leaf, getting a value at
@@ -193,7 +202,7 @@ class MCTS(object):
             self._root = self._root._children[last_move]
             self._root._parent = None
         else:
-            self._root = TreeNode(None, 1.0)
+            self._root = TreeNode(None, 1.0, noise=self.dnoise)
 
     def __str__(self):
         return "MCTS"

@@ -49,10 +49,20 @@ def convert_game_board(onefile,feature_list,pgn2value):
 def convert_game_value(onefile,feature_list,pgn2value):
     doc = xmltodict.parse(open(onefile,encoding='utf-8').read())
     fen = doc['ChineseChessRecord']["Head"]["FEN"]
-    pgnfile = doc['ChineseChessRecord']["Head"]["From"]
+    if pgn2value is not None:
+        pgnfile = doc['ChineseChessRecord']["Head"]["From"]
     moves = [i["@value"] for i in  doc['ChineseChessRecord']['MoveList']["Move"] if i["@value"] != '00-00']
     bb = BaseChessBoard(fen)
-    val = pgn2value[pgnfile]
+    if pgn2value is not None:
+        val = pgn2value[pgnfile]
+    else:
+        place = onefile.split('.')[-2].split('_')[-1]
+        if place == 'w':
+            val = 1
+        elif place == 'b':
+            val = -1
+        else:
+            val = 0
     red = False
     for i in moves:
         red = not red
