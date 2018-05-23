@@ -139,6 +139,8 @@ while True:
         begin = time.time()
         is_end,winner = game_states.game_end()
         if is_end == True:
+            if winner == -1:
+                winner = 'peace'
             result = winner
             break
         start = time.time()
