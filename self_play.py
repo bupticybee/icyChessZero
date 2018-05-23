@@ -39,21 +39,28 @@ import argparse
 import urllib.request
 import urllib.parse
 from gameplay import GameState,countpiece
+from net import net_maintainer
 
 parser = argparse.ArgumentParser(description="mcts self play script") 
 parser.add_argument('--verbose', '-v', action='store_true', help='verbose mode')
 parser.add_argument('--gpu', '-g' , choices=[int(i) for i in list(range(8))],type=int,help="gpu core number",default=0)
 parser.add_argument('--server', '-s' ,type=str,help="distributed server location",default=None)
+parser.add_argument('--download', '-d' ,type=str,help="download location",default='data/download_weight')
 args = parser.parse_args()
 
 gpu_num = int(args.gpu)
 server = args.server
+netdir = args.download
 os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 
 
     
 #(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/5_7_resnet_joint-two_stage/model_57',labels,GPU_CORE=[gpu_num])
-(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/update_model/model_2',labels,GPU_CORE=[gpu_num])
+nm = net_maintainer.NetMatainer(server=server,netdir=netdir)
+latest_model_name = nm.get_update()
+(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model(os.path.join(netdir,latest_model_name),labels,GPU_CORE=[gpu_num])
+nm.updated(latest_model_name)
+
 queue = Queue(400)
 async def push_queue( features,loop):
     future = loop.create_future()
@@ -121,6 +128,19 @@ def get_random_policy(policies):
             return val
 
 while True:
+    
+    latest_model_name = nm.get_update()
+    model_dir = os.path.join(netdir,latest_model_name)
+    #(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model(,labels,GPU_CORE=[gpu_num])
+    if latest_model_name != nm.netname:
+        with graph.as_default():
+            saver = tf.train.Saver(var_list=tf.global_variables())
+            saver.restore(sess,model_dir)
+        print('param updated {}'.format(model_dir))
+        nm.updated(latest_model_name)
+        
+    print("current weight {}".format(nm.netname))
+    
     states = []
     moves = []
 
