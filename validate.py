@@ -151,17 +151,18 @@ while chessplayed < 20:
     
     peace_round = 0
     remain_piece = countpiece(game_states.statestr)
-    for i in range(150):
+    for i in range(400):
         begin = time.time()
         is_end,winner = game_states.game_end()
         if is_end == True:
+            if winner == -1:
+                winner = 'peace'
             result = winner
             break
         start = time.time()
         if i % 2 == 0:
             queue = Queue(400)
             player = 'w'
-
             if i < 30:
                 temp = 1
             else:
