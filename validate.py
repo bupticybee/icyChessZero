@@ -163,7 +163,7 @@ while chessplayed < 20:
         if i % 2 == 0:
             queue = Queue(400)
             player = 'w'
-            if i < 30:
+            if i < 12:
                 temp = 1
             else:
                 temp = 1e-2
@@ -171,23 +171,17 @@ while chessplayed < 20:
                 ,predict_workers=[prediction_worker(mcts_policy_w,net_white)])
             policies,score = list(zip(acts, act_probs)),mcts_policy_w._root._Q
             score = -score
-            if score < -0.99 and can_surrender:
-                winner = 'b'
-                break
         else:
             queue = Queue(400)
             player = 'b'
 
-            if i < 14:
+            if i < 12:
                 temp = 1
             else:
                 temp = 1e-2
             acts, act_probs = mcts_policy_b.get_move_probs(game_states,temp=temp,verbose=False
                 ,predict_workers=[prediction_worker(mcts_policy_b,net_black)])
             policies,score = list(zip(acts, act_probs)),mcts_policy_b._root._Q
-            if score > 0.99 and can_surrender:
-                winner = 'w'
-                break
 
         move = get_random_policy(policies)
         states.append(game_states.statestr)
