@@ -1,6 +1,6 @@
 PY_ENV="python3"
 GPU_CORE=0
-THREADS=16
+THREADS=10
 SERVER="http://10.109.247.219:10087"
 parsearg () {
   while getopts "p:g:t:s:" optname
@@ -59,7 +59,7 @@ do
 {
 	#/usr/local/bin/python3 self_play.py	
     echo "${PY_ENV} -g=${GPU_CORE}"
-	${PY_ENV} self_play.py -g ${GPU_CORE} -s ${SERVER}
+	${PY_ENV} validate.py -g ${GPU_CORE} -s ${SERVER}
 } &
 done
 wait

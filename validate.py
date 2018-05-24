@@ -39,35 +39,36 @@ import argparse
 import urllib.request
 import urllib.parse
 from gameplay import GameState,countpiece
-from net import net_maintainer
 
 parser = argparse.ArgumentParser(description="mcts self play script") 
 parser.add_argument('--verbose', '-v', action='store_true', help='verbose mode')
 parser.add_argument('--gpu', '-g' , choices=[int(i) for i in list(range(8))],type=int,help="gpu core number",default=0)
 parser.add_argument('--server', '-s' ,type=str,help="distributed server location",default=None)
-parser.add_argument('--download', '-d' ,type=str,help="download location",default='data/download_weight')
 args = parser.parse_args()
 
 gpu_num = int(args.gpu)
 server = args.server
-netdir = args.download
 os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 
-
-    
-#(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/5_7_resnet_joint-two_stage/model_57',labels,GPU_CORE=[gpu_num])
-nm = net_maintainer.NetMatainer(server=server,netdir=netdir)
-latest_model_name = nm.get_update()
-(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model(os.path.join(netdir,latest_model_name),labels,GPU_CORE=[gpu_num])
-nm.updated(latest_model_name)
-
+stamp = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+play_save_root = 'data/validate'
+gameplay_dir = os.path.join(play_save_root,stamp)
+if os.path.exists(gameplay_dir):
+    print("dir existed {}".format(gameplay_dir))
+else:
+    os.mkdir(gameplay_dir)
+    print("creating dir {}".format(gameplay_dir))
+#(sess,graph),((X,training),(net_softmax,value_head)) 
+netold = resnet.get_model('data/prepare_weight/2018-05-23',labels,GPU_CORE=[gpu_num])
+netnew = resnet.get_model('data/prepare_weight/2018-05-24_21-19-55',labels,GPU_CORE=[gpu_num])
 queue = Queue(400)
 async def push_queue( features,loop):
     future = loop.create_future()
     item = QueueItem(features, future)
     await queue.put(item)
     return future
-async def prediction_worker(mcts_policy_async):
+async def prediction_worker(mcts_policy_async,network):
+    (sess,graph),((X,training),(net_softmax,value_head)) = network
     q = queue
     while mcts_policy_async.num_proceed < mcts_policy_async._n_playout:
         if q.empty():
@@ -127,40 +128,33 @@ def get_random_policy(policies):
         if tmp > randnum:
             return val
 
-while True:
-    
-    latest_model_name = nm.get_update()
-    model_dir = os.path.join(netdir,latest_model_name)
-    #(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model(,labels,GPU_CORE=[gpu_num])
-    if latest_model_name != nm.netname:
-        with graph.as_default():
-            saver = tf.train.Saver(var_list=tf.global_variables())
-            saver.restore(sess,model_dir)
-        print('param updated {}'.format(model_dir))
-        nm.updated(latest_model_name)
-        
-    print("current weight {}".format(nm.netname))
-    
+chessplayed = 0
+while chessplayed < 20:
+    chessplayed += 1
     states = []
     moves = []
 
     game_states = GameState()
-    mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
-                                        ,virtual_loss=0.02,policy_loop_arg=True,c_puct=1.5,dnoise=True)
-    mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
-                                        ,virtual_loss=0.02,policy_loop_arg=True,c_puct=1.5,dnoise=True)
+    mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=800,search_threads=16
+                                        ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5)
+    mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=800,search_threads=16
+                                        ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5)
+    white_player = 'new'
+    black_player = 'old'
+    net_white = netnew  
+    net_black = netold
+    if random.random() < 0.5:
+        white_player,black_player = black_player,white_player
+        net_white,net_black = net_black,net_white
     result = 'peace'
+    can_surrender = False# random.random() > 0.1
+    
     peace_round = 0
     remain_piece = countpiece(game_states.statestr)
-    
-    can_surrender = random.random() > 0.1
-    can_surrender = False
-    for i in range(400):
+    for i in range(150):
         begin = time.time()
         is_end,winner = game_states.game_end()
         if is_end == True:
-            if winner == -1:
-                winner = 'peace'
             result = winner
             break
         start = time.time()
@@ -173,7 +167,7 @@ while True:
             else:
                 temp = 1e-2
             acts, act_probs = mcts_policy_w.get_move_probs(game_states,temp=temp,verbose=False
-                ,predict_workers=[prediction_worker(mcts_policy_w)])
+                ,predict_workers=[prediction_worker(mcts_policy_w,net_white)])
             policies,score = list(zip(acts, act_probs)),mcts_policy_w._root._Q
             score = -score
             if score < -0.99 and can_surrender:
@@ -183,12 +177,12 @@ while True:
             queue = Queue(400)
             player = 'b'
 
-            if i < 30:
+            if i < 14:
                 temp = 1
             else:
                 temp = 1e-2
             acts, act_probs = mcts_policy_b.get_move_probs(game_states,temp=temp,verbose=False
-                ,predict_workers=[prediction_worker(mcts_policy_b)])
+                ,predict_workers=[prediction_worker(mcts_policy_b,net_black)])
             policies,score = list(zip(acts, act_probs)),mcts_policy_b._root._Q
             if score > 0.99 and can_surrender:
                 winner = 'w'
@@ -230,15 +224,5 @@ while True:
     stamp = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
     randstamp = random.randint(0,1000)
 
-    # send data to server if possible
-    if server is not None and server[:4] == 'http':        
-        print("sending gameplay to server")
-        data = urllib.parse.urlencode({'name':'{}_{}_mcts-mcts_{}.cbf'.format(stamp,randstamp,winner),'content':cbfile.text})
-        data = data.encode('utf-8')
-        request = urllib.request.Request("{}/submit_chess".format(server))
-        request.add_header("Content-Type","application/x-www-form-urlencoded;charset=utf-8")
-        f = urllib.request.urlopen(request, data)
-        print(f.read().decode('utf-8'))
-
-    cbfile.dump('data/self-plays/{}_{}_mcts-mcts_{}.cbf'.format(stamp,randstamp,winner))
+    cbfile.dump('{}/{}_{}_{}-{}_mcts-mcts_{}.cbf'.format(gameplay_dir,stamp,randstamp,white_player,black_player,winner))
 mcts_play_wins.append(winner)
