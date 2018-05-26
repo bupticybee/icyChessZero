@@ -59,8 +59,16 @@ else:
     os.mkdir(gameplay_dir)
     print("creating dir {}".format(gameplay_dir))
 #(sess,graph),((X,training),(net_softmax,value_head)) 
-netold = resnet.get_model('data/prepare_weight/2018-05-23',labels,GPU_CORE=[gpu_num])
-netnew = resnet.get_model('data/prepare_weight/2018-05-24_21-19-55',labels,GPU_CORE=[gpu_num])
+
+new_name, old_name = sorted([i[:-6] for i in os.listdir('data/prepare_weight/') if '.index' in i])[::-1][:2]
+
+print("------------------------------------------")
+print("loading new model {}".format(new_name))
+print("loading old model {}".format(old_name))
+print("------------------------------------------")
+
+netold = resnet.get_model('data/prepare_weight/{}'.format(old_name),labels,GPU_CORE=[gpu_num])
+netnew = resnet.get_model('data/prepare_weight/{}'.format(new_name),labels,GPU_CORE=[gpu_num])
 queue = Queue(400)
 async def push_queue( features,loop):
     future = loop.create_future()
@@ -220,4 +228,3 @@ while chessplayed < 20:
     randstamp = random.randint(0,1000)
 
     cbfile.dump('{}/{}_{}_{}-{}_mcts-mcts_{}.cbf'.format(gameplay_dir,stamp,randstamp,white_player,black_player,winner))
-mcts_play_wins.append(winner)

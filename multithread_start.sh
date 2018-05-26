@@ -42,14 +42,14 @@ echo "server :"${SERVER}
 echo "-----------------------------------"
 echo "Is the setting ok? [y/N]"
 
-read is_okay
-if [ "${is_okay}" = "y" ]
-then 
-	echo "okay"
-else
-	echo "exiting..."
-    exit
-fi
+#read is_okay
+#if [ "${is_okay}" = "y" ]
+#then 
+#	echo "okay"
+#else
+#	echo "exiting..."
+#    exit
+#fi
 
 echo "executing..."
 
