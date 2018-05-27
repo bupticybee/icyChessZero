@@ -332,7 +332,7 @@ import os
 if not os.path.exists("models/{}".format(model_name)):
     os.mkdir("models/{}".format(model_name))
     
-N_BATCH = int(len(trainset) / BATCH_SIZE) * 75
+N_BATCH = int(len(trainset) / BATCH_SIZE) * 40
 
 latest_netname = NetMatainer(None,network_dir).get_latest()
 
