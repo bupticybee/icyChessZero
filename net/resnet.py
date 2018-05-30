@@ -140,7 +140,7 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
                 with tf.device("/gpu:{}".format(one_core)):
                     print(ind)
                     body = res_net_board(X[ind * (BATCH_SIZE // len(GPU_CORE)):(ind + 1) * (BATCH_SIZE // len(GPU_CORE))],
-                                         "selectnet",training=training,filters=FILTERS)
+                                         "selectnet",training=training,filters=FILTERS,NUM_RES_LAYERS=NUM_RES_LAYERS)
                     with tf.variable_scope("policy_head"):
                         policy_head = tf.layers.conv2d(body, 2, 1, padding='SAME')
                         policy_head = tf.contrib.layers.batch_norm(policy_head, center=False, epsilon=1e-5, fused=True,
@@ -217,9 +217,9 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
         config.gpu_options.allow_growth = True
         config.allow_soft_placement = True
         sess = tf.Session(config=config)
-        sess.run(tf.global_variables_initializer())
+        #sess.run(tf.global_variables_initializer())
 
-        tf.train.global_step(sess, global_step)
+        #tf.train.global_step(sess, global_step)
     with graph.as_default():
         saver = tf.train.Saver(var_list=tf.global_variables())
         saver.restore(sess,MODEL_NAME)

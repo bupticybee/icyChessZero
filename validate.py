@@ -51,14 +51,7 @@ server = args.server
 os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 
 #stamp = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-stamp = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
-play_save_root = 'data/validate'
-gameplay_dir = os.path.join(play_save_root,stamp)
-if os.path.exists(gameplay_dir):
-    print("dir existed {}".format(gameplay_dir))
-else:
-    os.mkdir(gameplay_dir)
-    print("creating dir {}".format(gameplay_dir))
+
 #(sess,graph),((X,training),(net_softmax,value_head)) 
 
 new_name, old_name = sorted([i[:-6] for i in os.listdir('data/prepare_weight/') if '.index' in i])[::-1][:2]
@@ -68,8 +61,24 @@ print("loading new model {}".format(new_name))
 print("loading old model {}".format(old_name))
 print("------------------------------------------")
 
-netold = resnet.get_model('data/prepare_weight/{}'.format(old_name),labels,GPU_CORE=[gpu_num])
-netnew = resnet.get_model('data/prepare_weight/{}'.format(new_name),labels,GPU_CORE=[gpu_num])
+#netold = resnet.get_model('data/prepare_weight/{}'.format(old_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+#netnew = resnet.get_model('data/prepare_weight/{}'.format(new_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+
+netold = resnet.get_model('data/prepare_weight/2018-05-30_11-25-13',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+netnew = resnet.get_model('models/update_model/model_2',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+
+#stamp = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
+stamp = new_name
+
+stamp = '2000'
+play_save_root = 'data/validate'
+gameplay_dir = os.path.join(play_save_root,stamp)
+if os.path.exists(gameplay_dir):
+    print("dir existed {}".format(gameplay_dir))
+else:
+    os.mkdir(gameplay_dir)
+    print("creating dir {}".format(gameplay_dir))
+
 queue = Queue(400)
 async def push_queue( features,loop):
     future = loop.create_future()
@@ -138,15 +147,15 @@ def get_random_policy(policies):
             return val
 
 chessplayed = 0
-while chessplayed < 20:
+while chessplayed < 10:
     chessplayed += 1
     states = []
     moves = []
 
     game_states = GameState()
-    mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=800,search_threads=16
+    mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
                                         ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5)
-    mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=800,search_threads=16
+    mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
                                         ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5)
     white_player = 'new'
     black_player = 'old'
@@ -172,7 +181,7 @@ while chessplayed < 20:
         if i % 2 == 0:
             queue = Queue(400)
             player = 'w'
-            if i < 12:
+            if i < 30:
                 temp = 1
             else:
                 temp = 1e-2
@@ -184,7 +193,7 @@ while chessplayed < 20:
             queue = Queue(400)
             player = 'b'
 
-            if i < 12:
+            if i < 30:
                 temp = 1
             else:
                 temp = 1e-2
