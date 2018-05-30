@@ -64,13 +64,13 @@ print("------------------------------------------")
 #netold = resnet.get_model('data/prepare_weight/{}'.format(old_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
 #netnew = resnet.get_model('data/prepare_weight/{}'.format(new_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
 
-netold = resnet.get_model('data/prepare_weight/2018-05-30_11-25-13',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
-netnew = resnet.get_model('models/update_model/model_2',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+#netold = resnet.get_model('data/prepare_weight/2018-05-30_11-25-13',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+#netnew = resnet.get_model('models/update_model/model_2',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
 
 #stamp = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
 stamp = new_name
 
-stamp = '2000'
+#stamp = '2000'
 play_save_root = 'data/validate'
 gameplay_dir = os.path.join(play_save_root,stamp)
 if os.path.exists(gameplay_dir):
