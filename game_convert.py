@@ -46,6 +46,19 @@ def convert_game_board(onefile,feature_list,pgn2value):
         moveresult = bb.move(Pos(x1,y1),Pos(x2,y2))
         assert(moveresult != None)
 
+def is_game_valid(onefile,feature_list,pgn2value):
+    doc = xmltodict.parse(open(onefile,encoding='utf-8').read())
+    fen = doc['ChineseChessRecord']["Head"]["FEN"]
+    if pgn2value is not None:
+        pgnfile = doc['ChineseChessRecord']["Head"]["From"]
+    #moves = [i["@value"] for i in  doc['ChineseChessRecord']['MoveList']["Move"] if i["@value"] != '00-00']
+    bb = BaseChessBoard(fen)
+    if pgn2value is not None:      
+        if pgnfile not in pgn2value:
+            return False
+        else:
+            return True
+        
 def convert_game_value(onefile,feature_list,pgn2value):
     doc = xmltodict.parse(open(onefile,encoding='utf-8').read())
     fen = doc['ChineseChessRecord']["Head"]["FEN"]
@@ -53,8 +66,9 @@ def convert_game_value(onefile,feature_list,pgn2value):
         pgnfile = doc['ChineseChessRecord']["Head"]["From"]
     moves = [i["@value"] for i in  doc['ChineseChessRecord']['MoveList']["Move"] if i["@value"] != '00-00']
     bb = BaseChessBoard(fen)
-    if pgn2value is not None:
+    if pgn2value is not None:      
         val = pgn2value[pgnfile]
+        #print(val)
     else:
         place = onefile.split('.')[-2].split('_')[-1]
         if place == 'w':

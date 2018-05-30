@@ -2,7 +2,8 @@ import os
 import numpy as np
 import time
 #evalue_dir = 'data/validate/2018-05-25'
-stamp = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+#stamp = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+stamp = sorted([i for i in os.listdir('data/validate/') if '_blank' not in i])[-1]
 play_save_root = 'data/validate'
 evalue_dir = os.path.join(play_save_root,stamp)
 

@@ -58,7 +58,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 #(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model('models/5_7_resnet_joint-two_stage/model_57',labels,GPU_CORE=[gpu_num])
 nm = net_maintainer.NetMatainer(server=server,netdir=netdir)
 latest_model_name = nm.get_update()
-(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model(os.path.join(netdir,latest_model_name),labels,GPU_CORE=[gpu_num])
+(sess,graph),((X,training),(net_softmax,value_head)) = resnet.get_model(os.path.join(netdir,latest_model_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
 nm.updated(latest_model_name)
 
 queue = Queue(400)

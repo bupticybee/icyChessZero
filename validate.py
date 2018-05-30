@@ -50,7 +50,8 @@ gpu_num = int(args.gpu)
 server = args.server
 os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 
-stamp = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+#stamp = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+stamp = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
 play_save_root = 'data/validate'
 gameplay_dir = os.path.join(play_save_root,stamp)
 if os.path.exists(gameplay_dir):

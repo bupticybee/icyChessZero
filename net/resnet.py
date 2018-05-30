@@ -46,7 +46,7 @@ def res_net_board(inputx,name,training,filters=256,NUM_RES_LAYERS=4):
     net = tf.layers.batch_normalization(net,training=training,name="{}_res_bnb".format(name))
     net = tf.nn.elu(net,name="{}_res_elub".format(name))
     for i in range(NUM_RES_LAYERS):
-        net = res_block(net,name="{}_layer_{}".format(name,i + 1),training=training)
+        net = res_block(net,name="{}_layer_{}".format(name,i + 1),training=training,filters=filters)
         print(net.get_shape().as_list())
     print("inside res net {}".format(str(net.get_shape().as_list())))
     #net_unsoftmax = conv_block(net,name="{}_conv".format(name),training=training)
@@ -111,7 +111,7 @@ def reduce_mean(x):
 def merge(x):
     return tf.concat(x,axis=0)
 
-def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS = 4,):
+def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS = 4,FILTERS = 256,extra = False):
     tf.reset_default_graph()
     graph = tf.Graph()
     with graph.as_default():
@@ -140,7 +140,7 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
                 with tf.device("/gpu:{}".format(one_core)):
                     print(ind)
                     body = res_net_board(X[ind * (BATCH_SIZE // len(GPU_CORE)):(ind + 1) * (BATCH_SIZE // len(GPU_CORE))],
-                                         "selectnet",training=training)
+                                         "selectnet",training=training,filters=FILTERS)
                     with tf.variable_scope("policy_head"):
                         policy_head = tf.layers.conv2d(body, 2, 1, padding='SAME')
                         policy_head = tf.contrib.layers.batch_norm(policy_head, center=False, epsilon=1e-5, fused=True,
@@ -223,4 +223,7 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
     with graph.as_default():
         saver = tf.train.Saver(var_list=tf.global_variables())
         saver.restore(sess,MODEL_NAME)
-    return (sess,graph),((X,training),(net_softmax,value_head))
+    if extra:
+        return (sess,graph),((X,training),(net_softmax,value_head,train_op_policy,train_op_value,policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score))
+    else:
+        return (sess,graph),((X,training),(net_softmax,value_head))
