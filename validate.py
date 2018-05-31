@@ -61,11 +61,11 @@ print("loading new model {}".format(new_name))
 print("loading old model {}".format(old_name))
 print("------------------------------------------")
 
-#netold = resnet.get_model('data/prepare_weight/{}'.format(old_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
-#netnew = resnet.get_model('data/prepare_weight/{}'.format(new_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+netold = resnet.get_model('data/prepare_weight/{}'.format(old_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+netnew = resnet.get_model('data/prepare_weight/{}'.format(new_name),labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
 
-#netold = resnet.get_model('data/prepare_weight/2018-05-30_11-25-13',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
-#netnew = resnet.get_model('models/update_model/model_2',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+#netold = resnet.get_model('data/prepare_weight/2018-05-30_18-41-03',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
+#netnew = resnet.get_model('data/prepare_weight/2018-05-30_18-41-03',labels,GPU_CORE=[gpu_num],FILTERS=128,NUM_RES_LAYERS=7)
 
 #stamp = time.strftime('%Y-%m-%d_%H-%M-%S',time.localtime(time.time()))
 stamp = new_name
@@ -153,9 +153,9 @@ while chessplayed < 10:
     moves = []
 
     game_states = GameState()
-    mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
+    mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=800,search_threads=16
                                         ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5)
-    mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
+    mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=800,search_threads=16
                                         ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5)
     white_player = 'new'
     black_player = 'old'

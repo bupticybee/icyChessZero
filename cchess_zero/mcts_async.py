@@ -32,6 +32,7 @@ class TreeNode(object):
             according to the policy function.
         """
         if self.noise == True and self._parent == None:
+            print("noise")
             noise_d =  np.random.dirichlet([0.3] * len(action_priors))
             for (action, prob),one_noise in zip(action_priors,noise_d):
                 if action not in self._children:

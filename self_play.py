@@ -145,9 +145,9 @@ while True:
     moves = []
 
     game_states = GameState()
-    mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
+    mcts_policy_w = mcts_async.MCTS(policy_value_fn_queue,n_playout=800,search_threads=16
                                         ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5,dnoise=False)
-    mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=400,search_threads=16
+    mcts_policy_b = mcts_async.MCTS(policy_value_fn_queue,n_playout=800,search_threads=16
                                         ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5,dnoise=False)
     result = 'peace'
     peace_round = 0
