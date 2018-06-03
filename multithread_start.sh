@@ -2,8 +2,9 @@ PY_ENV="python3"
 GPU_CORE=0
 THREADS=25
 SERVER="http://10.109.247.219:10087"
+WAIT="yes"
 parsearg () {
-  while getopts "p:g:t:s:" optname
+  while getopts "p:g:t:s:n:" optname
     do
       case "$optname" in
         "p")
@@ -17,6 +18,9 @@ parsearg () {
           ;;
         "s")
           SERVER=${OPTARG}
+          ;;
+        "n")
+          WAIT="no"
           ;;
         "?")
           echo "Unknown option $OPTARG"
@@ -62,5 +66,8 @@ do
 	${PY_ENV} self_play.py -g ${GPU_CORE} -s ${SERVER}
 } &
 done
-wait
 
+if [ "${WAIT}" = "yes" ]
+then 
+    wait
+fi
