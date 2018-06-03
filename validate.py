@@ -181,7 +181,7 @@ while chessplayed < 10:
         if i % 2 == 0:
             queue = Queue(400)
             player = 'w'
-            if i < 30:
+            if i < 12 or game_states.maxrepeat > 1:
                 temp = 1
             else:
                 temp = 1e-2
@@ -193,7 +193,7 @@ while chessplayed < 10:
             queue = Queue(400)
             player = 'b'
 
-            if i < 30:
+            if i < 12 or game_states.maxrepeat > 1:
                 temp = 1
             else:
                 temp = 1e-2

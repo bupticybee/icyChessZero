@@ -82,7 +82,7 @@ class GameState():
             self.currentplayer = 'w'
         self.pastdic.setdefault(self.statestr,0)
         self.pastdic[self.statestr] += 1
-        self.maxrepeat = max(self.maxrepeat,self.pastdic[self.statestr])
+        self.maxrepeat = self.pastdic[self.statestr]
 
 class GamePlay:
     def __init__(self):

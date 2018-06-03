@@ -168,7 +168,7 @@ while True:
             queue = Queue(400)
             player = 'w'
 
-            if i < 30:
+            if i < 30 or game_states.maxrepeat > 1:
                 temp = 1
             else:
                 temp = 1e-2
@@ -183,7 +183,7 @@ while True:
             queue = Queue(400)
             player = 'b'
 
-            if i < 30:
+            if i < 30 or game_states.maxrepeat > 1:
                 temp = 1
             else:
                 temp = 1e-2
