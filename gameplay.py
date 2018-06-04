@@ -51,10 +51,10 @@ class GameState():
         return K,k
             
     def game_end(self):
-        #if self.statestr.find('k') == -1:
-        #    return True,'w'
-        #elif self.statestr.find('K') == -1:
-        #    return True,'b'
+        if self.statestr.find('k') == -1:
+            return True,'w'
+        elif self.statestr.find('K') == -1:
+            return True,'b'
         wk,bk = self.get_king_pos()
         if self.maxrepeat >= 3 and (self.lastmove[-2:] != wk and self.lastmove[-2:] != bk):
             return True,self.get_current_player()
