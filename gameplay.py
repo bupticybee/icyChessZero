@@ -60,14 +60,14 @@ class GameState():
             return True,self.get_current_player()
         #if self.maxrepeat >= 4:
         #    return True,self.get_current_player()#-1
-        targetkingdic = {'b':wk,'w':bk}
-        moveset = GameBoard.get_legal_moves(self.statestr,self.get_current_player())
+        #targetkingdic = {'b':wk,'w':bk}
+        #moveset = GameBoard.get_legal_moves(self.statestr,self.get_current_player())
         
-        targetset = set([i[-2:] for i in moveset])
+        #targetset = set([i[-2:] for i in moveset])
         
-        targ_king = targetkingdic[self.currentplayer]
-        if targ_king in targetset:
-            return True,self.currentplayer
+        #targ_king = targetkingdic[self.currentplayer]
+        #if targ_king in targetset:
+        #    return True,self.currentplayer
         return False,None
     
     def get_current_player(self):
