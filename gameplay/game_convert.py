@@ -1,4 +1,6 @@
 import xmltodict
+import sys
+sys.path.append('../')
 from cchess import *
 from common import board
 

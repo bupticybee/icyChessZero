@@ -1,5 +1,7 @@
 import tensorflow as tf
 import numpy as np
+import sys
+sys.path.append('../')
 from matplotlib import pyplot as plt
 import random 
 import time
