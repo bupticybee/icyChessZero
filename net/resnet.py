@@ -7,9 +7,12 @@ import scipy
 import pandas as pd
 import tflearn
 import copy
+import os
 import sys
-sys.path.append('../')
-from game_convert import convert_game,convert_game_value,convert_game_board
+currentpath = os.path.dirname(os.path.realpath(__file__))
+project_basedir = os.path.join(currentpath,'..')
+sys.path.append(project_basedir)
+from gameplay.game_convert import convert_game,convert_game_value,convert_game_board
 
 #GPU_CORE = [0]
 #BATCH_SIZE = 512
