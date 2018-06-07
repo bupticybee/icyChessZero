@@ -12,7 +12,8 @@ import sys
 currentpath = os.path.dirname(os.path.realpath(__file__))
 project_basedir = os.path.join(currentpath,'..')
 sys.path.append(project_basedir)
-from gameplay.game_convert import convert_game,convert_game_value,convert_game_board
+from gameplays import game_convert
+#import convert_game,convert_game_value,convert_game_board
 
 #GPU_CORE = [0]
 #BATCH_SIZE = 512
@@ -140,7 +141,7 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
         accuracy_select_collection = []
         with tf.variable_scope(tf.get_variable_scope()) as vscope:
             for ind,one_core in enumerate(GPU_CORE):
-                with tf.device("/gpu:{}".format(one_core)):
+                with tf.device("/gpu:{}".format(one_core) if one_core else ""):
                     print(ind)
                     body = res_net_board(X[ind * (BATCH_SIZE // len(GPU_CORE)):(ind + 1) * (BATCH_SIZE // len(GPU_CORE))],
                                          "selectnet",training=training,filters=FILTERS,NUM_RES_LAYERS=NUM_RES_LAYERS)

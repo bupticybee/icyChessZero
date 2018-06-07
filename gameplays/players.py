@@ -5,9 +5,8 @@ import sys
 currentpath = os.path.dirname(os.path.realpath(__file__))
 project_basedir = os.path.join(currentpath,'..')
 sys.path.append(project_basedir)
-from gameplay.gameplay import GameState
 
-rom asyncio import Future
+from asyncio import Future
 import os
 import asyncio
 from asyncio.queues import Queue
@@ -37,7 +36,7 @@ from cchess_zero import mcts
 from cchess import *
 from common import board
 import common
-from gameplay.game_convert import boardarr2netinput
+from gameplays.game_convert import boardarr2netinput
 from cchess import BaseChessBoard
 from cchess_zero import mcts_pool,mcts_async
 from collections import deque, defaultdict, namedtuple
@@ -81,8 +80,8 @@ class NetworkPlayer(Player):
         await self.queue.put(item)
         return future
     async def prediction_worker(self,mcts_policy_async):
-        (sess,graph),((X,training),(net_softmax,value_head)) = self.netwrok
-        q = queue
+        (sess,graph),((X,training),(net_softmax,value_head)) = self.network
+        q = self.queue
         while mcts_policy_async.num_proceed < mcts_policy_async._n_playout:
             if q.empty():
                 await asyncio.sleep(1e-3)
@@ -135,12 +134,12 @@ class NetworkPlayer(Player):
     def make_move(self,state):
         assert(state.currentplayer == self.side)
         if state.move_number < self.temp_round or state.maxrepeat > 1:
-                temp = 1
-            else:
-                temp = 1e-2
+            temp = 1
+        else:
+            temp = 1e-2
         acts, act_probs = self.mcts_policy.get_move_probs(state,temp=temp,verbose=False
                 ,predict_workers=[self.prediction_worker(self.mcts_policy)])
-        policies,score = list(zip(acts, act_probs)),mcts_policy_w._root._Q
+        policies,score = list(zip(acts, act_probs)),self.mcts_policy._root._Q
         score = -score
         # 1 means going to win, -1 means going to lose
         if score < self.surrender_threshold and self.can_surrender:
@@ -152,3 +151,10 @@ class NetworkPlayer(Player):
     
     def oppoent_make_move(self,move,state):
         self.mcts_policy.update_with_move(move,allow_legacy=self.allow_legacy)
+        
+if __name__ == "__main__":
+    from gameplays import gameplay
+    network = resnet.get_model(os.path.join(project_basedir,'data/prepare_weight/2018-06-07_14-13-24'),labels,GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
+    state = gameplay.GameState()
+    player = NetworkPlayer('w',network)
+    print(player.make_move(state))
