@@ -63,8 +63,8 @@ class GameState():
         elif self.statestr.find('K') == -1:
             return True,'b'
         wk,bk = self.get_king_pos()
-        if self.maxrepeat >= 3 and (self.lastmove[-2:] != wk and self.lastmove[-2:] != bk):
-            return True,self.get_current_player()
+        #if self.maxrepeat >= 3 and (self.lastmove[-2:] != wk and self.lastmove[-2:] != bk):
+        #    return True,self.get_current_player()
         #if self.maxrepeat >= 4:
         #    return True,self.get_current_player()#-1
         targetkingdic = {'b':wk,'w':bk}
