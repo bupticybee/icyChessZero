@@ -132,7 +132,7 @@ class NetworkPlayer(Player):
             if tmp > randnum:
                 return val
     
-    def make_move(self,state):
+    def make_move(self,state,actual_move=True):
         assert(state.currentplayer == self.side)
         if state.move_number < self.temp_round or (self.repeat_noise and state.maxrepeat > 1):
             temp = 1
@@ -146,8 +146,9 @@ class NetworkPlayer(Player):
         if score < self.surrender_threshold and self.can_surrender:
             return None,score
         move = self.get_random_policy(policies)
-        state.do_move(move)
-        self.mcts_policy.update_with_move(move,allow_legacy=self.allow_legacy)
+        if actual_move:
+            state.do_move(move)
+            self.mcts_policy.update_with_move(move,allow_legacy=self.allow_legacy)
         return move,score
     
     def oppoent_make_move(self,move,state):
