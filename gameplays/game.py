@@ -160,7 +160,7 @@ if __name__ == "__main__":
     network_a = resnet.get_model(os.path.join(project_basedir,'data/prepare_weight/2018-06-07_14-13-24'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
     network_b = resnet.get_model(os.path.join(project_basedir,'data/download_weight/2018-06-10_14-13-23'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
     
-    vg = ValidationGames(network_w=network_a,network_b=network_b,white_name='07',black_name='10',recoard_dir='data/validate',n_playout=400)
+    vg = ValidationGames(network_w=network_b,network_b=network_b,white_name='07',black_name='10',play_times=10,recoard_dir='data/validate',n_playout=400)
     vg.play()
     
     
