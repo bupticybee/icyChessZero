@@ -62,7 +62,7 @@ class Player(object):
 class NetworkPlayer(Player):
     def __init__(self,side,network,debugging=True,n_playout=800,search_threads=16
                 ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5,dnoise=False,temp_round=30
-                ,can_surrender=False,surrender_threshold=-0.99,allow_legacy=False):
+                ,can_surrender=False,surrender_threshold=-0.99,allow_legacy=False,repeat_noise=True):
         super(NetworkPlayer, self).__init__(side)
         self.network = network
         self.debugging = debugging
@@ -71,6 +71,7 @@ class NetworkPlayer(Player):
         self.can_surrender = can_surrender
         self.allow_legacy = allow_legacy
         self.surrender_threshold = surrender_threshold
+        self.repeat_noise = repeat_noise
         self.mcts_policy = mcts_async.MCTS(self.policy_value_fn_queue,n_playout=n_playout,search_threads=search_threads
                                         ,virtual_loss=virtual_loss,policy_loop_arg=policy_loop_arg,c_puct=c_puct,dnoise=dnoise)
     
@@ -133,7 +134,7 @@ class NetworkPlayer(Player):
     
     def make_move(self,state):
         assert(state.currentplayer == self.side)
-        if state.move_number < self.temp_round or state.maxrepeat > 1:
+        if state.move_number < self.temp_round or (self.repeat_noise and state.maxrepeat > 1):
             temp = 1
         else:
             temp = 1e-2
