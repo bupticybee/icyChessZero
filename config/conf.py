@@ -8,5 +8,7 @@ download_weight_dir = os.path.join(project_basedir,'data/download_weight')
 
 validate_dir = os.path.join(project_basedir,'data/validate')
 daily_log_dir = os.path.join(project_basedir,'data/log_update')
+history_selfplay_dir = os.path.join(project_basedir,'data/history_selfplays')
+
 port = 10088
 server = 'http://10.109.247.219'

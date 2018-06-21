@@ -114,10 +114,14 @@ class ContinusNetworkPlayGames(object):
             self.end_of_game(cbffilename,moves,cbfile)
             
 class DistributedSelfPlayGames(ContinusNetworkPlayGames):
-    def __init__(self,gpu_num=0,**kwargs):
+    def __init__(self,gpu_num=0,auto_update=True,**kwargs):
         self.gpu_num = gpu_num
+        self.auto_update = auto_update
         super(DistributedSelfPlayGames, self).__init__(**kwargs)
     def begin_of_game(self):
+        if not self.auto_update:
+            print('no auto update')
+            return
         latest_model_name = self.nm.get_update()
         model_dir = os.path.join(self.distributed_dir,latest_model_name)
         if self.network_w is None or self.network_b is None:
@@ -158,9 +162,12 @@ if __name__ == "__main__":
     #cn.play()
     
     network_a = resnet.get_model(os.path.join(project_basedir,'data/prepare_weight/2018-06-07_14-13-24'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
-    network_b = resnet.get_model(os.path.join(project_basedir,'data/download_weight/2018-06-10_14-13-23'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
+    #network_a = resnet.get_model(os.path.join(project_basedir,'data/download_weight/2018-06-10_14-13-23'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
+    #network_b = resnet.get_model(os.path.join(project_basedir,'data/prepare_weight/2018-06-07_14-13-24'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
     
-    vg = ValidationGames(network_w=network_b,network_b=network_b,white_name='07',black_name='10',play_times=10,recoard_dir='data/validate',n_playout=400)
-    vg.play()
+    #vg = ValidationGames(network_w=network_a,network_b=network_b,white_name='07',black_name='10',play_times=40,recoard_dir='data/validate',n_playout=400)
+    #vg.play()
+    cn = DistributedSelfPlayGames(network_w=network_a,network_b=network_a,distributed_server='http://10.109.247.219:10087',play_times=40,n_playout=400,auto_update=False,recoard_dir='data/validate')
+    cn.play()
     
     

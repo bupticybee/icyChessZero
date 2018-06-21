@@ -1,7 +1,10 @@
 import tensorflow as tf
 import numpy as np
+import os
 import sys
-sys.path.append('../')
+currentpath = os.path.dirname(os.path.realpath(__file__))
+project_basedir = os.path.join(currentpath,'..')
+sys.path.append(project_basedir)
 from matplotlib import pyplot as plt
 import random 
 import time
