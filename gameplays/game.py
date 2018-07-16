@@ -10,6 +10,7 @@ import time
 import numpy as np
 import random
 from cchess_zero import cbf
+from config import conf
 import os
 from net import net_maintainer
 import urllib
@@ -128,7 +129,7 @@ class DistributedSelfPlayGames(ContinusNetworkPlayGames):
             print('initizing params {}'.format(latest_model_name))
             network = resnet.get_model(model_dir,
                 common.board.create_uci_labels(),GPU_CORE=[self.gpu_num],
-                FILTERS=128,NUM_RES_LAYERS=7)
+                FILTERS=conf.network_filters,NUM_RES_LAYERS=conf.network_layers)
             self.network_w = network
             self.network_b = network
             self.nm.updated(latest_model_name)
@@ -161,13 +162,13 @@ if __name__ == "__main__":
     #cn = DistributedSelfPlayGames(distributed_server='http://10.109.247.219:10087',play_times=10,n_playout=400)
     #cn.play()
     
-    network_a = resnet.get_model(os.path.join(project_basedir,'data/prepare_weight/2018-06-07_14-13-24'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
+    network_a = resnet.get_model(os.path.join(project_basedir,'data/prepare_weight/2018-06-20_09-00-14'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
     #network_a = resnet.get_model(os.path.join(project_basedir,'data/download_weight/2018-06-10_14-13-23'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
-    #network_b = resnet.get_model(os.path.join(project_basedir,'data/prepare_weight/2018-06-07_14-13-24'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
+    network_b = resnet.get_model(os.path.join(project_basedir,'data/models/update_model_model_2'),common.board.create_uci_labels(),GPU_CORE=[""],FILTERS=128,NUM_RES_LAYERS=7)
     
-    #vg = ValidationGames(network_w=network_a,network_b=network_b,white_name='07',black_name='10',play_times=40,recoard_dir='data/validate',n_playout=400)
-    #vg.play()
-    cn = DistributedSelfPlayGames(network_w=network_a,network_b=network_a,distributed_server='http://10.109.247.219:10087',play_times=40,n_playout=400,auto_update=False,recoard_dir='data/validate')
-    cn.play()
+    vg = ValidationGames(network_w=network_a,network_b=network_b,white_name='oldnet',black_name='newnet',play_times=200,recoard_dir='data/validate',n_playout=400)
+    vg.play()
+    #cn = DistributedSelfPlayGames(network_w=network_a,network_b=network_a,distributed_server='http://10.109.247.219:10087',play_times=40,n_playout=400,auto_update=False,recoard_dir='data/validate')
+    #cn.play()
     
     

@@ -224,9 +224,13 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
         #sess.run(tf.global_variables_initializer())
 
         #tf.train.global_step(sess, global_step)
-    with graph.as_default():
-        saver = tf.train.Saver(var_list=tf.global_variables())
-        saver.restore(sess,MODEL_NAME)
+    if MODEL_NAME is not None:
+        with graph.as_default():
+            saver = tf.train.Saver(var_list=tf.global_variables())
+            saver.restore(sess,MODEL_NAME)
+    else:
+        print("initing model weights ....")
+        sess.run(tf.global_variables_initializer())
     if extra:
         return (sess,graph),((X,training),(net_softmax,value_head,train_op_policy,train_op_value,policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score))
     else:
