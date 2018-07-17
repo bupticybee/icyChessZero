@@ -14,6 +14,7 @@ from config import conf
 import os
 from net import net_maintainer
 import urllib
+import tensorflow as tf
 
 class Game(object):
     def __init__(self,white,black,verbose=True):

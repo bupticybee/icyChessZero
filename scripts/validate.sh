@@ -1,7 +1,7 @@
 PY_ENV="python3"
 GPU_CORE=0
 THREADS=20
-SERVER="http://10.109.247.219:10087"
+SERVER="http://10.109.247.219:10088"
 parsearg () {
   while getopts "p:g:t:s:" optname
     do

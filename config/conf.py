@@ -20,3 +20,4 @@ batch_size = 256
 
 network_filters = 128
 network_layers = 7
+validate_gameplay = 200
