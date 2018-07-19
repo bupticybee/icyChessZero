@@ -21,3 +21,6 @@ batch_size = 256
 network_filters = 128
 network_layers = 7
 validate_gameplay = 200
+
+train_playout = 400
+val_playout = 400

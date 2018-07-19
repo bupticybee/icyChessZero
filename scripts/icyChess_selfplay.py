@@ -16,7 +16,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 cn = DistributedSelfPlayGames(
     gpu_num = gpu_num,
     distributed_server='{}:{}'.format(conf.server,conf.port),
-    n_playout=400,
+    n_playout=conf.train_playout,
     recoard_dir=conf.distributed_datadir,
     distributed_dir=conf.download_weight_dir,
 )
