@@ -24,3 +24,6 @@ validate_gameplay = 200
 
 train_playout = 400
 val_playout = 400
+
+train_temp_round = 30
+val_temp_round = 12

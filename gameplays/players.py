@@ -5,7 +5,7 @@ import sys
 currentpath = os.path.dirname(os.path.realpath(__file__))
 project_basedir = os.path.join(currentpath,'..')
 sys.path.append(project_basedir)
-
+from config import conf
 from asyncio import Future
 import os
 import asyncio
@@ -61,7 +61,7 @@ class Player(object):
     
 class NetworkPlayer(Player):
     def __init__(self,side,network,debugging=True,n_playout=800,search_threads=16
-                ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5,dnoise=False,temp_round=30
+                ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5,dnoise=False,temp_round=conf.train_temp_round
                 ,can_surrender=False,surrender_threshold=-0.99,allow_legacy=False,repeat_noise=True):
         super(NetworkPlayer, self).__init__(side)
         self.network = network
