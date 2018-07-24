@@ -7,9 +7,13 @@ import scipy
 import pandas as pd
 import tflearn
 import copy
+import os
 import sys
-sys.path.append('../')
-from game_convert import convert_game,convert_game_value,convert_game_board
+currentpath = os.path.dirname(os.path.realpath(__file__))
+project_basedir = os.path.join(currentpath,'..')
+sys.path.append(project_basedir)
+from gameplays import game_convert
+#import convert_game,convert_game_value,convert_game_board
 
 #GPU_CORE = [0]
 #BATCH_SIZE = 512
@@ -137,7 +141,7 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
         accuracy_select_collection = []
         with tf.variable_scope(tf.get_variable_scope()) as vscope:
             for ind,one_core in enumerate(GPU_CORE):
-                with tf.device("/gpu:{}".format(one_core)):
+                with tf.device("/gpu:{}".format(one_core) if one_core else ""):
                     print(ind)
                     body = res_net_board(X[ind * (BATCH_SIZE // len(GPU_CORE)):(ind + 1) * (BATCH_SIZE // len(GPU_CORE))],
                                          "selectnet",training=training,filters=FILTERS,NUM_RES_LAYERS=NUM_RES_LAYERS)
@@ -220,9 +224,14 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
         #sess.run(tf.global_variables_initializer())
 
         #tf.train.global_step(sess, global_step)
-    with graph.as_default():
-        saver = tf.train.Saver(var_list=tf.global_variables())
-        saver.restore(sess,MODEL_NAME)
+    if MODEL_NAME is not None:
+        with graph.as_default():
+            saver = tf.train.Saver(var_list=tf.global_variables())
+            saver.restore(sess,MODEL_NAME)
+    else:
+        with graph.as_default():
+            print("initing model weights ....")
+            sess.run(tf.global_variables_initializer())
     if extra:
         return (sess,graph),((X,training),(net_softmax,value_head,train_op_policy,train_op_value,policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score))
     else:
