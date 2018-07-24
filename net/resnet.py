@@ -141,7 +141,11 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
         accuracy_select_collection = []
         with tf.variable_scope(tf.get_variable_scope()) as vscope:
             for ind,one_core in enumerate(GPU_CORE):
-                with tf.device("/gpu:{}".format(one_core) if one_core else ""):
+                if one_core is not None:
+                    devicestr = "/gpu:{}".format(one_core) if one_core else ""
+                else:
+                    devicestr = '/cpu:0'
+                with tf.device(devicestr):
                     print(ind)
                     body = res_net_board(X[ind * (BATCH_SIZE // len(GPU_CORE)):(ind + 1) * (BATCH_SIZE // len(GPU_CORE))],
                                          "selectnet",training=training,filters=FILTERS,NUM_RES_LAYERS=NUM_RES_LAYERS)
