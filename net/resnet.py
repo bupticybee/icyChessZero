@@ -237,6 +237,6 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
             print("initing model weights ....")
             sess.run(tf.global_variables_initializer())
     if extra:
-        return (sess,graph),((X,training),(net_softmax,value_head,train_op_policy,train_op_value,policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score))
+        return (sess,graph),((X,training),(net_softmax,value_head,train_op_multitarg,(train_op_policy,train_op_value),policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score))
     else:
         return (sess,graph),((X,training),(net_softmax,value_head))

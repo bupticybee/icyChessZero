@@ -155,7 +155,7 @@ latest_netname = NetMatainer(None,network_dir).get_latest()
 
 print("latest network : {}".format(latest_netname))
 
-(sess,graph),((X,training),(net_softmax,value_head,train_op_policy,train_op_value,policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score)) = \
+(sess,graph),((X,training),(net_softmax,value_head,train_op_multitarg,(train_op_policy,train_op_value),policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score)) = \
     get_model('{}/{}'.format(conf.distributed_server_weight_dir,latest_netname),labels,GPU_CORE=GPU_CORE,FILTERS=conf.network_filters,NUM_RES_LAYERS=conf.network_layers,extra=True)
     
 train_epoch = 1
@@ -207,15 +207,21 @@ for one_epoch in range(train_epoch,N_EPOCH):
         # learning rate decay strategy
         batch_lr = begining_learning_rate * 2 ** -(one_epoch // DECAY_EPOCH)
         with graph.as_default():
-            _,step_loss,step_acc_move,step_value = sess.run(
-                [train_op_policy,policy_loss,accuracy_select,global_step],feed_dict={
-                    X:batch_x,nextmove:batch_y,learning_rate:batch_lr,training:True,
-                })
-            _,step_value_loss,step_val_predict = sess.run(
-                [train_op_value,value_loss,value_head],feed_dict={
+            #_,step_loss,step_acc_move,step_value = sess.run(
+            #    [train_op_policy,policy_loss,accuracy_select,global_step],feed_dict={
+            #        X:batch_x,nextmove:batch_y,learning_rate:batch_lr,training:True,
+            #    })
+            #_,step_value_loss,step_val_predict = sess.run(
+            #    [train_op_value,value_loss,value_head],feed_dict={
+            #        X:batch_x,learning_rate:batch_lr,training:True,score:batch_v,
+            #    })
+            
+            
+            
+            _,step_value_loss,step_val_predict,step_loss,step_acc_move,step_value = sess.run(
+                [train_op_multitarg,value_loss,value_head,policy_loss,accuracy_select,global_step],feed_dict={
                     X:batch_x,learning_rate:batch_lr,training:True,score:batch_v,
                 })
-        
         step_acc_move *= 100
         
         expacc_move.update(step_acc_move)
