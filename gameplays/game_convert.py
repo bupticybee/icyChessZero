@@ -1,4 +1,9 @@
 import xmltodict
+import sys
+import os
+currentpath = os.path.dirname(os.path.realpath(__file__))
+project_basedir = os.path.join(currentpath,'..')
+sys.path.append(project_basedir)
 from cchess import *
 from common import board
 

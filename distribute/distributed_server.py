@@ -2,7 +2,14 @@ import tornado.ioloop
 import tornado.web
 import argparse
 import os
-datadir = 'data/distributed'
+import sys
+
+currentpath = os.path.dirname(os.path.realpath(__file__))
+project_basedir = os.path.join(currentpath,'..')
+sys.path.append(project_basedir)
+
+from config import conf
+datadir = conf.distributed_datadir
 
 parser = argparse.ArgumentParser(description="mcts self play script") 
 parser.add_argument('--verbose', '-v', help='verbose mode',type=bool,default=False)
@@ -28,7 +35,7 @@ class ChessSubmitHandler(tornado.web.RequestHandler):
 
 class BestWeightNameHandler(tornado.web.RequestHandler):
     def get(self):
-        filelist = os.listdir('data/prepare_weight')
+        filelist = os.listdir(conf.distributed_server_weight_dir)
         filelist = [i[:-6] for i in filelist if '.index' in i]
         self.write(sorted(filelist)[-1])
 
@@ -36,7 +43,7 @@ class ModelGetHandler(tornado.web.RequestHandler):
     def get(self):
         name = self.get_argument("name") 
         model_f = self.get_argument("model_f") 
-        file_name = os.path.join('data/prepare_weight/',"{}.{}".format(name,model_f))
+        file_name = os.path.join(conf.distributed_server_weight_dir,"{}.{}".format(name,model_f))
         self.set_header("Content-Type",'application/octet-stream')
         self.set_header('Content-Disposition','attachment; filename={}'.format("{}.{}".format(name,model_f)))
         with open(file_name,'rb') as f:
@@ -57,5 +64,5 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(10087)
+    app.listen(conf.port)
     tornado.ioloop.IOLoop.current().start()

@@ -1,9 +1,9 @@
 PY_ENV="python3"
 GPU_CORE=0
 THREADS=20
-SERVER="http://10.109.247.219:10087"
+WAIT="yes"
 parsearg () {
-  while getopts "p:g:t:s:" optname
+  while getopts "p:g:t:s:n:" optname
     do
       case "$optname" in
         "p")
@@ -15,8 +15,8 @@ parsearg () {
         "t")
           THREADS=${OPTARG}
           ;;
-        "s")
-          SERVER=${OPTARG}
+        "n")
+          WAIT="no"
           ;;
         "?")
           echo "Unknown option $OPTARG"
@@ -38,7 +38,6 @@ echo "-----------------------------------"
 echo "python env: "${PY_ENV}
 echo "gpu core: "${GPU_CORE}
 echo "threads number:"${THREADS}
-echo "server :"${SERVER}
 echo "-----------------------------------"
 echo "Is the setting ok? [y/N]"
 
@@ -59,8 +58,11 @@ do
 {
 	#/usr/local/bin/python3 self_play.py	
     echo "${PY_ENV} -g=${GPU_CORE}"
-	${PY_ENV} validate.py -g ${GPU_CORE} -s ${SERVER}
+	${PY_ENV} icyChess_selfplay.py -g ${GPU_CORE} 
 } &
 done
-wait
 
+if [ "${WAIT}" = "yes" ]
+then 
+    wait
+fi
