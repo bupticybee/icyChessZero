@@ -220,7 +220,7 @@ for one_epoch in range(train_epoch,N_EPOCH):
             
             _,step_value_loss,step_val_predict,step_loss,step_acc_move,step_value = sess.run(
                 [train_op_multitarg,value_loss,value_head,policy_loss,accuracy_select,global_step],feed_dict={
-                    X:batch_x,learning_rate:batch_lr,training:True,score:batch_v,
+                    X:batch_x,learning_rate:batch_lr,training:True,score:batch_v,nextmove:batch_y,
                 })
         step_acc_move *= 100
         
