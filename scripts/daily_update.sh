@@ -1,4 +1,13 @@
 cd /work/icybee/icyChessZero/scripts
+
+# if 20,000 gameplays has been generated
+count=`ls ../data/distributed | wc -w`
+echo ${count}
+if [ $count -le 20000 ];then
+    echo 'exiting'
+    exit
+fi 
+
 sh kill_all.sh
 sleep 10s
 sh multithread_start.sh -p /usr/local/bin/python3  -g 1 -t 20 -n no
