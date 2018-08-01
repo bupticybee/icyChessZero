@@ -22,8 +22,8 @@ network_filters = 128
 network_layers = 7
 validate_gameplay = 200
 
-train_playout = 400
-val_playout = 400
+train_playout = 800
+val_playout = 800
 
 train_temp_round = 30
 val_temp_round = 12
