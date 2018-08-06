@@ -12,6 +12,10 @@
 
 ![table](imgs/table.png)
 
+当然，目前棋力还比较差，因为是从完全随机开始训练的，比方说某个对局片段：
+
+![demo](imgs/demo.gif)
+
 # 推荐代码运行环境
 * python==3.6.0
 * tensorflow==1.4.0
