@@ -10,13 +10,18 @@ validate_dir = os.path.join(project_basedir,'data/validate')
 daily_log_dir = os.path.join(project_basedir,'data/log_update')
 history_selfplay_dir = os.path.join(project_basedir,'data/history_selfplays')
 model_dir = os.path.join(project_basedir,'data/models')
+imsa_cbf = os.path.join(project_basedir,'data/imsa-cbf')
 
 port = 10088
 server = 'http://10.109.247.219'
 
 train_lr = 0.01
-train_epoch = 2
+train_epoch = 1
 batch_size = 256
+noup_flag = 'noup'
+
+sl_epoch = 30
+sl_decay_eopch = 20
 
 network_filters = 128
 network_layers = 7

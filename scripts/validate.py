@@ -28,7 +28,8 @@ server = args.server
 os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
 
 
-new_name, old_name = sorted([i[:-6] for i in os.listdir(conf.distributed_server_weight_dir) if '.index' in i])[::-1][:2]
+new_name = sorted([i[:-6] for i in os.listdir(conf.distributed_server_weight_dir) if '.index' in i])[-1]
+old_name = sorted([i[:-6] for i in os.listdir(conf.distributed_server_weight_dir) if '.index' in i and conf.noup_flag not in i])[-1]
 
 print("------------------------------------------")
 print("loading new model {}".format(new_name))

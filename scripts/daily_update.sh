@@ -16,4 +16,7 @@ sleep 10s
 sleep 10s
 sh validate.sh -p /usr/local/bin/python3 -g 0 -t 20
 sleep 10s
+python3 check_ifup.py
+
+sleep 10s
 sh multithread_start.sh -p /usr/local/bin/python3  -g 0 -t 20

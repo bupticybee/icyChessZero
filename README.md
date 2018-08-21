@@ -19,6 +19,7 @@
 # 推荐代码运行环境
 * python==3.6.0
 * tensorflow==1.4.0
+* threadpool==1.3.2
 * xmltodict==0.11.0
 * urllib3==1.22
 * numpy==1.14.3

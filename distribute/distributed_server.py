@@ -36,7 +36,7 @@ class ChessSubmitHandler(tornado.web.RequestHandler):
 class BestWeightNameHandler(tornado.web.RequestHandler):
     def get(self):
         filelist = os.listdir(conf.distributed_server_weight_dir)
-        filelist = [i[:-6] for i in filelist if '.index' in i]
+        filelist = [i[:-6] for i in filelist if '.index' in i and conf.noup_flag not in i]
         self.write(sorted(filelist)[-1])
 
 class ModelGetHandler(tornado.web.RequestHandler):
