@@ -1,4 +1,5 @@
 import tornado.ioloop
+import shutil
 import tornado.web
 import argparse
 import os
@@ -54,7 +55,7 @@ peace_rates = [0]
 delta_elo = [0]
 
 one_dir = validate_dirs[-1]
-one_date = one_dir.split('/')[-1]
+one_date = one_dir.split('/')[-1].replace("_{}".format(conf.noup_flag),"")
 gameplays = os.listdir(one_dir)
 pointcdic = cal_points(gameplays)
 game_num = len(gameplays)
@@ -78,6 +79,7 @@ one_noupweight_noup = "{}_{}".format(one_noupweight,conf.noup_flag)
 if elo < 0:
     print("cannot up weight: win rate < 50%")
 else:
+    print(one_noupweight_noup)
     if os.path.exists(one_noupweight_noup + '.index'):
         print("up weight")
         for f in ['data-00000-of-00001','meta','index']:
