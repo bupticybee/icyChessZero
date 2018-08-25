@@ -76,6 +76,7 @@ one_noupweight = os.path.join(conf.distributed_server_weight_dir,one_date)
 one_noupweight_up = "{}".format(one_noupweight)
 one_noupweight_noup = "{}_{}".format(one_noupweight,conf.noup_flag)
 #print(one_noupweight,one_noupweight_up,one_noupweight_noup)
+print(one_noupweight_up)
 if elo < 0:
     print("cannot up weight: win rate < 50%")
 else:
@@ -85,6 +86,7 @@ else:
         for f in ['data-00000-of-00001','meta','index']:
             src = one_noupweight_noup + '.' + f
             dst = one_noupweight_up + '.' + f
+            print("copying file from {} to {}".format(src,dst))
             shutil.copyfile(src,dst)
     else:
         print("No weight to up")
