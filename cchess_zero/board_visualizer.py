@@ -11,6 +11,7 @@ img_path = os.path.join(currentfile,'images')
 
 
 def put_chess(l_img,s_img,cord):
+    l_img.flags.writeable = True
     x_offset, y_offset = cord
     y1, y2 = y_offset, y_offset + s_img.shape[0]
     x1, x2 = x_offset, x_offset + s_img.shape[1]

@@ -138,6 +138,23 @@ class MCTS(object):
                 state.do_move(action)
                 self.select_time += (time.time() - start)
             
+            # at leave node if long check or long catch then cut off the node
+            if state.should_cutoff():
+                # cut off node
+                for one_node in road:
+                    one_node.virtual_loss += self.virtual_loss
+                # now at this time, we do not update the entire tree branch, the accuracy loss is supposed to be small
+                # node.update_recursive(-leaf_value)
+                
+                # set virtual loss to -inf so that other threads would not visit the same node again(so the node is cut off)
+                node.virtual_loss = - np.inf
+                #node.update_recursive(leaf_value)
+                self.update_time += (time.time() - start)
+                # however the proceed number still goes up 1
+                self.num_proceed += 1
+                return 
+                
+            
             start = time.time()
             self.now_expanding.add(node)
             # Evaluate the leaf using a network which outputs a list of

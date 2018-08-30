@@ -4,6 +4,7 @@ import sys
 currentpath = os.path.dirname(os.path.realpath(__file__))
 project_basedir = os.path.join(currentpath,'..')
 sys.path.append(project_basedir)
+from config import conf
 
 from cchess import *
 from cchess_zero.gameboard import *
@@ -25,7 +26,7 @@ pieceset = {'A',
 countpiece = lambda x: sum([1 for i in x if i in pieceset])
 
 class GameState():
-    def __init__(self):
+    def __init__(self,enable_recoard_im=False):
         self.statestr = 'RNBAKABNR/9/1C5C1/P1P1P1P1P/9/9/p1p1p1p1p/1c5c1/9/rnbakabnr'
         self.currentplayer = 'w'
         self.ys = '9876543210'[::-1]
@@ -34,6 +35,20 @@ class GameState():
         self.maxrepeat = 0
         self.lastmove = ""
         self.move_number = 0
+        self.enable_recoard_im = enable_recoard_im
+        
+    def is_check_catch(self):
+        moveset = GameBoard.get_legal_moves(self.statestr,self.get_next_player())
+        targetset = set([i[-2:] for i in moveset])
+        
+        wk,bk = self.get_king_pos()
+        targetkingdic = {'b':wk,'w':bk}
+        targ_king = targetkingdic[self.get_next_player()]
+        # TODO add long catch logic
+        if targ_king in targetset:
+            return True
+        else:
+            return False
         
     def get_king_pos(self):
         board = self.statestr.replace("1", " ")
@@ -80,6 +95,12 @@ class GameState():
     def get_current_player(self):
         return self.currentplayer
     
+    def get_next_player(self):
+        if self.currentplayer == 'w':
+            return 'b'
+        elif self.currentplayer == 'b':
+            return 'w'
+    
     def do_move(self,move):
         self.lastmove = move
         self.statestr = GameBoard.sim_do_action(move,self.statestr)
@@ -87,10 +108,24 @@ class GameState():
             self.currentplayer = 'b'
         elif self.currentplayer == 'b':
             self.currentplayer = 'w'
-        self.pastdic.setdefault(self.statestr,0)
-        self.pastdic[self.statestr] += 1
-        self.maxrepeat = self.pastdic[self.statestr]
+        self.pastdic.setdefault(self.statestr,[0,False,self.get_next_player()]) # times, longcatch/check
+        self.pastdic[self.statestr][0] += 1
+        self.maxrepeat = self.pastdic[self.statestr][0]
+        if self.enable_recoard_im:
+            self.pastdic[self.statestr][1] = self.is_check_catch()
         self.move_number += 1
+        
+    def should_cutoff(self):
+        # the pastdic is empty when first move was made
+        if self.move_number < 2:
+            return False
+        state_appear_num = self.pastdic[self.statestr][0]
+        if state_appear_num > 1 and self.is_check_catch():
+            if conf.verbose:
+                print("find something to cut off")
+            return True
+        else:
+            return False
 
 class GamePlay:
     def __init__(self):

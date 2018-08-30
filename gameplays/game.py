@@ -144,6 +144,9 @@ class DistributedSelfPlayGames(ContinusNetworkPlayGames):
             print('param updated {}'.format(model_dir))
         print("current weight {}".format(self.nm.netname))
     def end_of_game(self,cbf_name,moves,cbfile):
+        if not conf.upload_gameplay_to_server:
+            print("not sending gameplay to server according to config")
+            return
         print("sending gameplay to server")
         data = urllib.parse.urlencode({'name':cbf_name,'content':cbfile.text})
         data = data.encode('utf-8')
