@@ -33,5 +33,5 @@ val_playout = 800
 train_temp_round = 30
 val_temp_round = 12
 
-upload_gameplay_to_server = False
-verbose = True
+upload_gameplay_to_server = True
+verbose = False
