@@ -50,14 +50,13 @@ class Game(object):
                 winner = winner_p
                 break
             
-            # TODO remove 60 turn peace and add notact long catch, add no attack peace
             remain_piece_round = gameplay.countpiece(self.gamestate.statestr)
             if remain_piece_round < remain_piece:
                 remain_piece = remain_piece_round
                 peace_round = 0
             else:
                 peace_round += 1
-            if peace_round > 60:
+            if peace_round > conf.non_cap_draw_round:
                 winner = 'peace'
                 break
         print('winner: {}'.format(winner))

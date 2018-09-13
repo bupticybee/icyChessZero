@@ -20,6 +20,7 @@ train_epoch = 1
 batch_size = 256
 noup_flag = 'noup'
 
+non_cap_draw_round = 120
 sl_epoch = 30
 sl_decay_eopch = 20
 
@@ -28,9 +29,9 @@ network_layers = 7
 validate_gameplay = 200
 
 train_playout = 800
-val_playout = 800
+val_playout = 1600
 
-train_temp_round = 30
+train_temp_round = 3000
 val_temp_round = 12
 
 upload_gameplay_to_server = True
