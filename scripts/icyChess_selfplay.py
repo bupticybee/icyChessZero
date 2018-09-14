@@ -19,5 +19,6 @@ cn = DistributedSelfPlayGames(
     n_playout=conf.train_playout,
     recoard_dir=conf.distributed_datadir,
     distributed_dir=conf.download_weight_dir,
+    dnoise=True,
 )
 cn.play()
