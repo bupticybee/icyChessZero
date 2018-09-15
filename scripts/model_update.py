@@ -53,6 +53,7 @@ model_name = 'update_model'
 
 distribute_dir = conf.distributed_datadir
 filelist = os.listdir(distribute_dir)
+filelist = sorted(filelist)
 
 network_dir = conf.distributed_server_weight_dir
 
@@ -69,7 +70,7 @@ rev_ab = dict(zip('abcdefghi','abcdefghi'[::-1]))
 rev_num = dict(zip('0123456789','0123456789'[::-1]))
 
 class ElePreloader(object):
-    def __init__(self,filelist,batch_size=64):
+    def __init__(self,filelist,batch_size=64,shuffle=False):
         self.batch_size=batch_size
         #content = pd.read_csv(datafile,header=None,index_col=None)
         self.filelist = filelist#[i[0] for i in content.get_values()]
@@ -78,6 +79,7 @@ class ElePreloader(object):
                              ,"black":['a', 'b', 'c', 'k', 'n', 'p', 'r']}
         self.batch_size = batch_size
         self.batch_iter = self.iter()
+        self.shuffle = shuffle
         assert(len(self.filelist) > batch_size)
         #self.game_iterlist = [None for i in self.filelist]
     
@@ -89,7 +91,8 @@ class ElePreloader(object):
         while True:
             for i in range(self.batch_size):
                 filelist = copy.copy(self.filelist)
-                random.shuffle(filelist)
+                if self.shuffle:
+                    random.shuffle(filelist)
                 #if self.game_iterlist[i] == None:
                 #    if len(filelist) == 0:
                 #        filelist = copy.copy(self.filelist)
