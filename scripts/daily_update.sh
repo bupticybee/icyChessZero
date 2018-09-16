@@ -1,9 +1,9 @@
 cd /work/icybee/icyChessZero/scripts
 
-# if 10,000 gameplays has been generated
+# if 20,000 gameplays has been generated
 count=`ls ../data/distributed | wc -w`
 echo ${count}
-if [ $count -le 10000 ];then
+if [ $count -le 20000 ];then
     echo 'exiting'
     exit
 fi 
@@ -16,10 +16,12 @@ sleep 10s
 sleep 10s
 sh kill_all.sh
 sleep 10s
+/usr/local/bin/python3 upweight.py > uplog.tt
+sleep 10s
 sh validate.sh -p /usr/local/bin/python3 -g 0 -t 20 > validate_log.txt &
 sh validate.sh -p /usr/local/bin/python3 -g 1 -t 20 > validate_log.txt 
 sleep 10s
-/usr/local/bin/python3 check_ifup.py > uplog.tt
+#/usr/local/bin/python3 check_ifup.py > uplog.tt
 
 sh kill_all.sh
 sleep 10s

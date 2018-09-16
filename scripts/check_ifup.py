@@ -77,7 +77,7 @@ one_noupweight_up = "{}".format(one_noupweight)
 one_noupweight_noup = "{}_{}".format(one_noupweight,conf.noup_flag)
 print(one_noupweight,one_noupweight_up,one_noupweight_noup)
 print(one_noupweight_up)
-if elo < 0:
+if elo < -100:
     print("cannot up weight: win rate < 50%")
 else:
     print(one_noupweight_noup)
