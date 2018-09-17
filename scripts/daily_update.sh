@@ -1,9 +1,9 @@
 cd /work/icybee/icyChessZero/scripts
 
-# if 10,000 gameplays has been generated
+# if 15,000 gameplays has been generated
 count=`ls ../data/distributed | wc -w`
 echo ${count}
-if [ $count -le 10000 ];then
+if [ $count -le 15000 ];then
     echo 'exiting'
     exit
 fi 
