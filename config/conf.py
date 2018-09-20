@@ -36,3 +36,5 @@ val_temp_round = 12
 
 upload_gameplay_to_server = True
 verbose = False
+weight_up_immediately = True
+
