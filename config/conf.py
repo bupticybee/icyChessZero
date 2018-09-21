@@ -15,7 +15,7 @@ imsa_cbf = os.path.join(project_basedir,'data/imsa-cbf')
 port = 10088
 server = 'http://10.109.247.219'
 
-train_lr = 0.003#0.01
+train_lr = 0.1#0.01
 train_epoch = 1
 batch_size = 256
 noup_flag = 'noup'
