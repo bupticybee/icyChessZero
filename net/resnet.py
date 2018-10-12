@@ -180,7 +180,7 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
                             labels=score[ind * (BATCH_SIZE // len(GPU_CORE)):(ind + 1) * (BATCH_SIZE // len(GPU_CORE))],
                             predictions=value_head) 
                         value_loss = tf.reduce_mean(value_loss)
-                        regularizer = tf.contrib.layers.l2_regularizer(scale=1e-6)
+                        regularizer = tf.contrib.layers.l2_regularizer(scale=1e-4)
                         regular_variables = tf.trainable_variables()
                         l2_loss = tf.contrib.layers.apply_regularization(regularizer, regular_variables)
                         multitarget_loss = value_loss + policy_loss + l2_loss
