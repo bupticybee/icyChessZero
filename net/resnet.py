@@ -115,7 +115,7 @@ def reduce_mean(x):
 def merge(x):
     return tf.concat(x,axis=0)
 
-def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS = 4,FILTERS = 256,extra = False):
+def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS = 4,FILTERS = 256,extra = False,extrav2=False):
     tf.reset_default_graph()
     graph = tf.Graph()
     with graph.as_default():
@@ -236,6 +236,9 @@ def get_model(MODEL_NAME,labels,GPU_CORE = [0],BATCH_SIZE = 512,NUM_RES_LAYERS =
         with graph.as_default():
             print("initing model weights ....")
             sess.run(tf.global_variables_initializer())
+            
+    if extrav2:
+        return (sess,graph),((X,training),(net_softmax,value_head,train_op_multitarg,(train_op_policy,train_op_value),policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score,multitarget_loss))
     if extra:
         return (sess,graph),((X,training),(net_softmax,value_head,train_op_multitarg,(train_op_policy,train_op_value),policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score))
     else:

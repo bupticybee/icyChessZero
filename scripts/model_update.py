@@ -158,8 +158,8 @@ latest_netname = NetMatainer(None,network_dir).get_latest()
 
 print("latest network : {}".format(latest_netname))
 
-(sess,graph),((X,training),(net_softmax,value_head,train_op_multitarg,(train_op_policy,train_op_value),policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score)) = \
-    get_model('{}/{}'.format(conf.distributed_server_weight_dir,latest_netname),labels,GPU_CORE=GPU_CORE,FILTERS=conf.network_filters,NUM_RES_LAYERS=conf.network_layers,extra=True)
+(sess,graph),((X,training),(net_softmax,value_head,train_op_multitarg,(train_op_policy,train_op_value),policy_loss,accuracy_select,global_step,value_loss,nextmove,learning_rate,score,multitarget_loss)) = \
+    get_model('{}/{}'.format(conf.distributed_server_weight_dir,latest_netname),labels,GPU_CORE=GPU_CORE,FILTERS=conf.network_filters,NUM_RES_LAYERS=conf.network_layers,extrav2=True)
     
 train_epoch = 1
 train_batch = 0
@@ -183,8 +183,9 @@ class ExpVal:
 expacc_move = ExpVal()
 exploss = ExpVal()
 expsteploss = ExpVal()
+exptotalloss = ExpVal()
 
-begining_learning_rate = 1e-2
+begining_learning_rate = BEGINING_LR
 
 pred_image = None
 if restore == False:
@@ -221,8 +222,8 @@ for one_epoch in range(train_epoch,N_EPOCH):
             
             
             
-            _,step_value_loss,step_val_predict,step_loss,step_acc_move,step_value = sess.run(
-                [train_op_multitarg,value_loss,value_head,policy_loss,accuracy_select,global_step],feed_dict={
+            _,step_value_loss,step_val_predict,step_loss,step_acc_move,step_value,step_total_loss = sess.run(
+                [train_op_multitarg,value_loss,value_head,policy_loss,accuracy_select,global_step,multitarget_loss],feed_dict={
                     X:batch_x,learning_rate:batch_lr,training:True,score:batch_v,nextmove:batch_y,
                 })
         step_acc_move *= 100
@@ -230,10 +231,11 @@ for one_epoch in range(train_epoch,N_EPOCH):
         expacc_move.update(step_acc_move)
         exploss.update(step_loss)
         expsteploss.update(step_value_loss)
+        exptotalloss.update(step_total_loss)
 
        
-        pb.info = "EPOCH {} STEP {} LR {} ACC {} LOSS {} value_loss {}".format(
-            one_epoch,one_batch,batch_lr,expacc_move.getval(),exploss.getval(),expsteploss.getval())
+        pb.info = "EPOCH {} STEP {} LR {} ACC {} policy_loss {} value_loss {} total loss {}".format(
+            one_epoch,one_batch,batch_lr,expacc_move.getval(),exploss.getval(),expsteploss.getval(),exptotalloss.getval())
         
         pb.complete(one_finish_sum)
     print()
