@@ -31,7 +31,8 @@ class TreeNode(object):
         action_priors: a list of tuples of actions and their prior probability
             according to the policy function.
         """
-        if self.noise == True and self._parent == None:
+        # dirichlet noise should be applied when every select action 
+        if False and self.noise == True and self._parent == None:
             #print("noise")
             noise_d =  np.random.dirichlet([0.3] * len(action_priors))
             for (action, prob),one_noise in zip(action_priors,noise_d):
@@ -48,8 +49,16 @@ class TreeNode(object):
         plus bonus u(P).
         Return: A tuple of (action, next_node)
         """
-        return max(self._children.items(),
+        if self.noise == False:
+            return max(self._children.items(),
                    key=lambda act_node: act_node[1].get_value(c_puct))
+        elif self.noise == True and self._parent != None:
+            return max(self._children.items(),
+                   key=lambda act_node: act_node[1].get_value(c_puct))
+        else:
+            noise_d =  np.random.dirichlet([0.3] * len(self._children))
+            return max(list(zip(noise_d,self._children.items())),
+                   key=lambda act_node: act_node[1][1].get_value(c_puct,noise_p=act_node[0]))[1]
 
     def update(self, leaf_value):
         """Update node values from leaf evaluation.
@@ -59,7 +68,7 @@ class TreeNode(object):
         # Count visit.
         self._n_visits += 1
         # Update Q, a running average of values for all visits.
-        self._Q += 1.0*(leaf_value - self._Q) / self._n_visits
+        self._Q += 1.0 * (leaf_value - self._Q) / self._n_visits
 
     def update_recursive(self, leaf_value):
         """Like a call to update(), but applied recursively for all ancestors.
@@ -69,16 +78,21 @@ class TreeNode(object):
             self._parent.update_recursive(-leaf_value)
         self.update(leaf_value)
 
-    def get_value(self, c_puct):
+    def get_value(self, c_puct,noise_p=None):
         """Calculate and return the value for this node.
         It is a combination of leaf evaluations Q, and this node's prior
         adjusted for its visit count, u.
         c_puct: a number in (0, inf) controlling the relative impact of
             value Q, and prior probability P, on this node's score.
         """
-        self._u = (c_puct * self._P *
-                   np.sqrt(self._parent._n_visits) / (1 + self._n_visits))
-        return self._Q + self._u + self.virtual_loss
+        if noise_p is None:
+            self._u = (c_puct * self._P *
+                       np.sqrt(self._parent._n_visits) / (1 + self._n_visits))
+            return self._Q + self._u + self.virtual_loss
+        else:
+            self._u = (c_puct * (self._P * 0.75 + noise_p * 0.25) *
+                       np.sqrt(self._parent._n_visits) / (1 + self._n_visits))
+            return self._Q + self._u + self.virtual_loss
 
     def is_leaf(self):
         """Check if leaf node (i.e. no nodes below this have been expanded)."""
