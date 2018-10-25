@@ -62,7 +62,7 @@ class Player(object):
 class NetworkPlayer(Player):
     def __init__(self,side,network,debugging=True,n_playout=800,search_threads=16
                 ,virtual_loss=0.02,policy_loop_arg=True,c_puct=5,dnoise=False,temp_round=conf.train_temp_round
-                ,can_surrender=False,surrender_threshold=-0.99,allow_legacy=False,repeat_noise=True):
+                ,can_surrender=False,surrender_threshold=-0.99,allow_legacy=False,repeat_noise=True,is_selfplay=False):
         super(NetworkPlayer, self).__init__(side)
         self.network = network
         self.debugging = debugging
@@ -74,6 +74,7 @@ class NetworkPlayer(Player):
         self.repeat_noise = repeat_noise
         self.mcts_policy = mcts_async.MCTS(self.policy_value_fn_queue,n_playout=n_playout,search_threads=search_threads
                                         ,virtual_loss=virtual_loss,policy_loop_arg=policy_loop_arg,c_puct=c_puct,dnoise=dnoise)
+        self.is_selfplay = is_selfplay
     
     async def push_queue(self,features,loop):
         future = loop.create_future()
@@ -137,9 +138,13 @@ class NetworkPlayer(Player):
         if state.move_number < self.temp_round or (self.repeat_noise and state.maxrepeat > 1):
             temp = 1
         else:
-            temp = 1e-2
+            temp = 1e-4
+        if state.move_number >= self.temp_round and self.is_selfplay == True:
+            can_apply_dnoise = True
+        else:
+            can_apply_dnoise = False
         acts, act_probs = self.mcts_policy.get_move_probs(state,temp=temp,verbose=False
-                ,predict_workers=[self.prediction_worker(self.mcts_policy)])
+                ,predict_workers=[self.prediction_worker(self.mcts_policy)],can_apply_dnoise = can_apply_dnoise)
         policies,score = list(zip(acts, act_probs)),self.mcts_policy._root._Q
         score = -score
         # 1 means going to win, -1 means going to lose

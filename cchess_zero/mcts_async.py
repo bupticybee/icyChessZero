@@ -104,7 +104,7 @@ class TreeNode(object):
 
 class MCTS(object):
     """An implementation of Monte Carlo Tree Search."""
-    def __init__(self, policy_value_fn, c_puct=5, n_playout=10000,search_threads=32,virtual_loss=3,policy_loop_arg=False,dnoise=False):
+    def __init__(self, policy_value_fn, c_puct=5, n_playout=10000,search_threads=32,virtual_loss=3,policy_loop_arg=False,dnoise=False,):
         """
         policy_value_fn: a function that takes in a board state and outputs
             a list of (action, probability) tuples and also a score in [-1, 1]
@@ -204,12 +204,14 @@ class MCTS(object):
             self.update_time += (time.time() - start)
             self.num_proceed += 1
 
-    def get_move_probs(self, state, temp=1e-3,verbose=False,predict_workers = []):
+    def get_move_probs(self, state, temp=1e-3,verbose=False,predict_workers = [],can_apply_dnoise=False):
         """Run all playouts sequentially and return the available actions and
         their corresponding probabilities.
         state: the current game state
         temp: temperature parameter in (0, 1] controls the level of exploration
         """
+        if can_apply_dnoise == False:
+            self._root.noise = False
         coroutine_list = []
         for n in range(self._n_playout):
             state_copy = copy.deepcopy(state)

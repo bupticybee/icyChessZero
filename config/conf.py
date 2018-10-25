@@ -31,7 +31,7 @@ validate_gameplay = 200
 train_playout = 800
 val_playout = 800
 
-train_temp_round = 3000
+train_temp_round = 30
 val_temp_round = 12
 
 upload_gameplay_to_server = True
