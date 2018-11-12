@@ -15,7 +15,7 @@ imsa_cbf = os.path.join(project_basedir,'data/imsa-cbf')
 port = 10088
 server = 'http://10.109.247.219'
 
-train_lr = 0.003
+train_lr = 0.1
 train_epoch = 1
 batch_size = 256
 noup_flag = 'noup'
@@ -31,7 +31,7 @@ validate_gameplay = 200
 train_playout = 800
 val_playout = 800
 
-train_temp_round = 30000
+train_temp_round = 30
 val_temp_round = 12
 
 upload_gameplay_to_server = True
