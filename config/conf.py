@@ -19,6 +19,7 @@ train_lr = 0.01
 train_epoch = 1
 batch_size = 256
 noup_flag = 'noup'
+c_puct = 1.5
 
 non_cap_draw_round = 120
 sl_epoch = 30

@@ -18,6 +18,7 @@ cn = DistributedSelfPlayGames(
     distributed_server='{}:{}'.format(conf.server,conf.port),
     n_playout=conf.train_playout,
     recoard_dir=conf.distributed_datadir,
+    c_puct=conf.c_puct,
     distributed_dir=conf.download_weight_dir,
     dnoise=True,
     is_selfplay=True,

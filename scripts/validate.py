@@ -50,7 +50,7 @@ else:
 
 number_played = len(os.listdir(recoard_dir))
 while number_played < conf.validate_gameplay:
-    vg = ValidationGames(network_w=netold,network_b=netnew,white_name='oldnet',black_name='newnet',play_times=1,recoard_dir=recoard_dir,n_playout=conf.val_playout,temp_round=conf.val_temp_round)
+    vg = ValidationGames(network_w=netold,network_b=netnew,white_name='oldnet',black_name='newnet',play_times=1,recoard_dir=recoard_dir,n_playout=conf.val_playout,temp_round=conf.val_temp_round,c_puct=conf.c_puct)
     vg.play()
     number_played = len(os.listdir(recoard_dir))
     print("played {} th game".format(number_played))
